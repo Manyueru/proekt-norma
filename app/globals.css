@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 250 248 243;
+  --fg: 46 44 40;
+  --muted: 122 118 108;
+  --card: 255 255 255;
+  --border-c: 228 224 214;
+}
+
+.dark {
+  --bg: 23 22 19;
+  --fg: 237 234 226;
+  --muted: 158 154 144;
+  --card: 32 30 26;
+  --border-c: 51 49 43;
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: "Inter", "Manrope", system-ui, sans-serif;
+}
+
+.bg-surface {
+  background-color: rgb(var(--card));
+}
+
+.text-muted-c {
+  color: rgb(var(--muted));
+}
+
+.border-c {
+  border-color: rgb(var(--border-c));
+}

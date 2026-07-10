@@ -1,0 +1,105 @@
+[
+  {
+    "id": "source-ontogenez-rechi",
+    "title": "Онтогенез речевой деятельности в норме и патологии",
+    "author": "А. А. Леонтьев",
+    "organization": "МГУ",
+    "year": 2003,
+    "type": "книга",
+    "language": "русский",
+    "url": "",
+    "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Классическое описание этапов формирования речи от гуления до фразовой речи.",
+    "topicSlugs": [
+      "sovmestnoe-vnimanie",
+      "pervye-rechevye-reakcii"
+    ],
+    "reliability": "C",
+    "checkedAt": "2026-06-20",
+    "isCurrent": true,
+    "studyStatus": "done",
+    "minAge": 0,
+    "maxAge": 3
+  },
+  {
+    "id": "source-who-milestones",
+    "title": "WHO Motor Development Milestones",
+    "author": "World Health Organization",
+    "organization": "ВОЗ",
+    "year": 2023,
+    "type": "клинические рекомендации",
+    "language": "английский",
+    "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones",
+    "summary": "Официальный материал ВОЗ по основным этапам моторного развития детей раннего возраста.",
+    "topicSlugs": [
+      "razvitie-2-mesyaca",
+      "sovmestnoe-vnimanie"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-06-28",
+    "isCurrent": true,
+    "studyStatus": "in-progress",
+    "minAge": 0,
+    "maxAge": 2
+  },
+  {
+    "id": "source-logopediya-uchebnik",
+    "title": "Логопедия: учебник для вузов",
+    "author": "под ред. Л. С. Волковой",
+    "organization": "",
+    "year": 2019,
+    "type": "учебник",
+    "language": "русский",
+    "url": "",
+    "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Базовый вузовский учебник по логопедии с описанием речевых нарушений и методов коррекции.",
+    "topicSlugs": [
+      "pervye-rechevye-reakcii"
+    ],
+    "reliability": "B",
+    "checkedAt": "2026-06-15",
+    "isCurrent": true,
+    "studyStatus": "in-progress",
+    "minAge": 0,
+    "maxAge": 7
+  },
+  {
+    "id": "source-vozrastnaya-fiziologiya",
+    "title": "Возрастная физиология и психофизиология",
+    "author": "Н. Н. Данилова",
+    "organization": "",
+    "year": 2012,
+    "type": "учебник",
+    "language": "русский",
+    "url": "",
+    "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Физиологические основы развития нервной системы ребёнка по возрастным периодам.",
+    "topicSlugs": [
+      "razvitie-2-mesyaca"
+    ],
+    "reliability": "C",
+    "checkedAt": "2026-05-30",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 0,
+    "maxAge": 1
+  },
+  {
+    "id": "source-asha-communication",
+    "title": "Typical Speech and Language Development",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA",
+    "year": 2024,
+    "type": "сайт",
+    "language": "английский",
+    "url": "https://www.asha.org/public/developmental-milestones/communication-milestones/",
+    "summary": "Официальные ориентиры ASHA по развитию коммуникации и речи. Используются как ориентиры, а не как самостоятельный диагноз.",
+    "topicSlugs": [
+      "sovmestnoe-vnimanie",
+      "pervye-rechevye-reakcii"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-02",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 0,
+    "maxAge": 5
+  }
+]

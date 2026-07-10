@@ -1,0 +1,49 @@
+import topicsData from "@/data/topics.json";
+import sourcesData from "@/data/sources.json";
+import observationsData from "@/data/observations.json";
+import casesData from "@/data/cases.json";
+import glossaryData from "@/data/glossary.json";
+import videosData from "@/data/videos.json";
+import {
+  ClinicalCase,
+  GlossaryTerm,
+  ObservationCard,
+  Source,
+  Topic,
+  Video
+} from "./types";
+
+export const topics = topicsData as Topic[];
+export const sources = sourcesData as Source[];
+export const observations = observationsData as ObservationCard[];
+export const cases = casesData as ClinicalCase[];
+export const glossary = glossaryData as GlossaryTerm[];
+export const videos = videosData as Video[];
+
+export function getTopic(slug: string): Topic | undefined {
+  return topics.find((t) => t.slug === slug);
+}
+
+export function getSourcesByIds(ids: string[]): Source[] {
+  return sources.filter((s) => ids.includes(s.id));
+}
+
+export function getObservation(slug: string): ObservationCard | undefined {
+  return observations.find((o) => o.slug === slug);
+}
+
+export function getCase(slug: string): ClinicalCase | undefined {
+  return cases.find((c) => c.slug === slug);
+}
+
+export function getCasesBySlugs(slugs: string[]): ClinicalCase[] {
+  return cases.filter((c) => slugs.includes(c.slug));
+}
+
+export function getTopicsBySlugs(slugs: string[]): Topic[] {
+  return topics.filter((t) => slugs.includes(t.slug));
+}
+
+export function getGlossaryTerm(slug: string): GlossaryTerm | undefined {
+  return glossary.find((g) => g.slug === slug);
+}
