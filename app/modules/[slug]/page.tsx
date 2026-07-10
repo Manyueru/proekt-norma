@@ -1,19 +1,22 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FileText, ClipboardList, Video } from "lucide-react";
 import { getSourcesByIds, getTopic, getCasesBySlugs, topics } from "@/lib/data";
 import { TRACK_LABELS } from "@/lib/types";
 import { TopicSection } from "@/components/topic/topic-section";
-import { StatusSelect } from "@/components/topic/status-select";
+import { TopicProgressControls } from "@/components/topic/topic-progress-controls";
 import { MiniTest } from "@/components/topic/mini-test";
 import { RelatedLinks } from "@/components/shared/related-links";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export function generateStaticParams() {
   return topics.map((t) => ({ slug: t.slug }));
 }
 
-export default function TopicPage({ params }: { params: { slug: string } }) {
-  const topic = getTopic(params.slug);
+export default async function TopicPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const topic = getTopic(slug);
   if (!topic) notFound();
 
   const relatedSources = getSourcesByIds(topic.sourceIds);
@@ -43,14 +46,17 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <p className="text-xs text-muted-c mb-2">{TRACK_LABELS[topic.track]}</p>
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <h1 className="text-xl font-medium">{topic.title}</h1>
-          <div className="w-44">
-            <StatusSelect slug={topic.slug} />
-          </div>
+          <TopicProgressControls slug={topic.slug} />
         </div>
         <p className="text-xs text-muted-c mt-2">Обновлено {topic.updatedAt}</p>
       </div>
 
-      <p className="text-sm text-muted-c leading-7">{topic.summary}</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-c leading-7">{topic.summary}</p>
+        <Link href={`/notes?new=study&topic=${topic.slug}`} className="shrink-0">
+          <Button>Создать конспект по теме</Button>
+        </Link>
+      </div>
 
       <TopicSection title="Цели обучения">
         <ul className="list-disc pl-5 flex flex-col gap-1">
@@ -94,7 +100,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
       {topic.miniTest.length > 0 && (
         <div className="border-t border-c pt-6">
           <h2 className="text-sm font-medium mb-4">Мини-тест</h2>
-          <MiniTest questions={topic.miniTest} />
+          <MiniTest topicSlug={topic.slug} questions={topic.miniTest} />
         </div>
       )}
     </div>

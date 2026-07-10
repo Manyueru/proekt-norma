@@ -6,19 +6,28 @@ import * as Icons from "lucide-react";
 import { NAV_ITEMS } from "./nav-items";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user, profile } = useAuth();
 
   return (
-    <aside className="hidden md:flex md:w-56 md:flex-col md:gap-6 border-r border-c bg-surface px-4 py-6 md:h-screen md:sticky md:top-0">
-      <Link href="/" className="px-2 text-[15px] font-medium">
-        Проект Норма
-      </Link>
-      <nav className="flex flex-col gap-1">
+    <aside className="hidden md:flex md:w-60 md:flex-col md:gap-5 border-r border-c bg-surface px-4 py-6 md:h-screen md:sticky md:top-0">
+      <div className="px-2">
+        <Link href="/" className="text-[15px] font-medium">
+          Проект Норма
+        </Link>
+        <p className="mt-1 text-[11px] text-muted-c">Учебная платформа дефектолога</p>
+      </div>
+
+      <nav className="flex flex-col gap-1 overflow-y-auto pr-1">
         {NAV_ITEMS.map((item) => {
           const Icon = Icons[item.icon] as Icons.LucideIcon;
-          const active = pathname === item.href;
+          const active =
+            item.href === "/"
+              ? pathname === "/"
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
@@ -36,7 +45,11 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="mt-auto px-2">
+
+      <div className="mt-auto flex flex-col gap-2 border-t border-c pt-4 px-2">
+        <Link href={user ? "/account" : "/auth/login"} className="text-xs text-muted-c hover:text-accent-blue">
+          {user ? profile?.displayName || user.email : "Войти для синхронизации"}
+        </Link>
         <ThemeToggle />
       </div>
     </aside>

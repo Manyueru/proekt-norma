@@ -8,8 +8,9 @@ export function generateStaticParams() {
   return cases.map((c) => ({ slug: c.slug }));
 }
 
-export default function CasePage({ params }: { params: { slug: string } }) {
-  const clinicalCase = getCase(params.slug);
+export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const clinicalCase = getCase(slug);
   if (!clinicalCase) notFound();
 
   const relatedTopics = getTopicsBySlugs(clinicalCase.topicSlugs);

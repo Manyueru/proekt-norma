@@ -1,37 +1,19 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { TopicStatus } from "./types";
-import { getTopicStatus, setTopicStatus, getProgress } from "./storage";
+import { usePersonalData } from "@/components/providers/personal-data-provider";
+import type { TopicStatus } from "./types";
 
 export function useTopicStatus(slug: string) {
-  const [status, setStatus] = useState<TopicStatus>("not-started");
+  const { progress, updateTopicStatus } = usePersonalData();
+  const status = progress[slug]?.status ?? "not-started";
 
-  const sync = useCallback(() => setStatus(getTopicStatus(slug)), [slug]);
-
-  useEffect(() => {
-    sync();
-    window.addEventListener("norma:progress-changed", sync);
-    return () => window.removeEventListener("norma:progress-changed", sync);
-  }, [sync]);
-
-  const update = (next: TopicStatus) => {
-    setTopicStatus(slug, next);
-    setStatus(next);
-  };
-
+  const update = (next: TopicStatus) => updateTopicStatus(slug, next);
   return [status, update] as const;
 }
 
 export function useAllProgress() {
-  const [progress, setProgress] = useState<Record<string, TopicStatus>>({});
-
-  useEffect(() => {
-    const sync = () => setProgress(getProgress());
-    sync();
-    window.addEventListener("norma:progress-changed", sync);
-    return () => window.removeEventListener("norma:progress-changed", sync);
-  }, []);
-
-  return progress;
+  const { progress } = usePersonalData();
+  return Object.fromEntries(
+    Object.entries(progress).map(([slug, record]) => [slug, record.status])
+  ) as Record<string, TopicStatus>;
 }

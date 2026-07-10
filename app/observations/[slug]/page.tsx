@@ -9,8 +9,9 @@ export function generateStaticParams() {
   return observations.map((o) => ({ slug: o.slug }));
 }
 
-export default function ObservationPage({ params }: { params: { slug: string } }) {
-  const observation = getObservation(params.slug);
+export default async function ObservationPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const observation = getObservation(slug);
   if (!observation) notFound();
 
   const relatedTopics = getTopicsBySlugs(observation.topicSlugs);

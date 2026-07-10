@@ -37,6 +37,7 @@ export interface MiniTestQuestion {
   question: string;
   options: string[];
   correctIndex: number;
+  explanation?: string;
 }
 
 export interface Topic {
@@ -152,16 +153,60 @@ export interface Video {
   limitations: string;
 }
 
+export interface UserProfile {
+  id: string;
+  displayName: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface TopicProgressRecord {
+  topicId: string;
+  status: TopicStatus;
+  startedAt?: string;
+  lastOpenedAt?: string;
+  completedAt?: string;
+  updatedAt: string;
+}
+
+export type NoteMode = "quick" | "study";
+
 export interface Note {
   id: string;
+  mode: NoteMode;
   title: string;
-  date: string;
   topicSlug?: string;
+  sourceId?: string;
+  body: string;
   mainIdea: string;
-  newFacts: string;
-  unclear: string;
-  toCheck: string;
-  example: string;
+  keyFacts: string;
+  unclearQuestions: string;
+  contradictions: string;
+  practicalValue: string;
   reviewQuestion: string;
-  nextReviewDate?: string;
+  reviewDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ClinicalCaseAnswerStatus = "draft" | "solved" | "review";
+
+export interface ClinicalCaseAnswer {
+  caseId: string;
+  answerText: string;
+  analysisRevealed: boolean;
+  status: ClinicalCaseAnswerStatus;
+  reviewDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TestAttempt {
+  id: string;
+  quizId: string;
+  topicSlug: string;
+  answers: Record<string, number>;
+  score: number;
+  total: number;
+  completedAt: string;
 }
