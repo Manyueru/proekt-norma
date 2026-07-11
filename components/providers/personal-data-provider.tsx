@@ -13,17 +13,23 @@ import { useAuth } from "./auth-provider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   getLocalCaseAnswers,
+  getLocalExams,
   getLocalNotes,
   getLocalProgress,
+  getLocalStudyTasks,
   getLocalTestAttempts,
   setLocalCaseAnswer,
+  setLocalExams,
   setLocalNotes,
   setLocalProgress,
+  setLocalStudyTasks,
   setLocalTestAttempts
 } from "@/lib/local-data";
 import type {
   ClinicalCaseAnswer,
+  Exam,
   Note,
+  StudyTask,
   TestAttempt,
   TopicProgressRecord,
   TopicStatus
@@ -37,12 +43,18 @@ interface PersonalDataContextValue {
   notes: Note[];
   caseAnswers: Record<string, ClinicalCaseAnswer>;
   testAttempts: TestAttempt[];
+  studyTasks: StudyTask[];
+  exams: Exam[];
   updateTopicStatus: (topicId: string, status: TopicStatus) => Promise<void>;
   markTopicOpened: (topicId: string) => Promise<void>;
   saveNote: (note: Note) => Promise<void>;
   deleteNote: (noteId: string) => Promise<void>;
   saveCaseAnswer: (answer: ClinicalCaseAnswer) => Promise<void>;
   saveTestAttempt: (attempt: TestAttempt) => Promise<void>;
+  saveStudyTask: (task: StudyTask) => Promise<void>;
+  deleteStudyTask: (taskId: string) => Promise<void>;
+  saveExam: (exam: Exam) => Promise<void>;
+  deleteExam: (examId: string) => Promise<void>;
   refresh: () => Promise<void>;
 }
 
@@ -117,6 +129,8 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [caseAnswers, setCaseAnswers] = useState<Record<string, ClinicalCaseAnswer>>({});
   const [testAttempts, setTestAttempts] = useState<TestAttempt[]>([]);
+  const [studyTasks, setStudyTasks] = useState<StudyTask[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
 
   const storageMode = user && configured && supabase && cloudAvailable ? "cloud" : "local";
 
@@ -125,6 +139,8 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
     setNotes(getLocalNotes());
     setCaseAnswers(getLocalCaseAnswers());
     setTestAttempts(getLocalTestAttempts());
+    setStudyTasks(getLocalStudyTasks());
+    setExams(getLocalExams());
     setSyncError(null);
   }, []);
 
@@ -177,6 +193,8 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
       )
     );
     setTestAttempts((testsResult.data ?? []).map(rowToTestAttempt));
+    setStudyTasks(getLocalStudyTasks());
+    setExams(getLocalExams());
     setSyncError(null);
     setLoading(false);
   }, [authLoading, configured, loadLocal, supabase, user]);
@@ -341,6 +359,38 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function saveStudyTask(task: StudyTask) {
+    const next = [task, ...studyTasks.filter((item) => item.id !== task.id)]
+      .sort((a, b) => a.dueAt.localeCompare(b.dueAt));
+    setStudyTasks(next);
+    setLocalStudyTasks(next);
+  }
+
+  async function deleteStudyTask(taskId: string) {
+    const next = studyTasks.filter((task) => task.id !== taskId);
+    setStudyTasks(next);
+    setLocalStudyTasks(next);
+  }
+
+  async function saveExam(exam: Exam) {
+    const next = [exam, ...exams.filter((item) => item.id !== exam.id)]
+      .sort((a, b) => a.date.localeCompare(b.date));
+    setExams(next);
+    setLocalExams(next);
+  }
+
+  async function deleteExam(examId: string) {
+    const nextExams = exams.filter((exam) => exam.id !== examId);
+    setExams(nextExams);
+    setLocalExams(nextExams);
+
+    const nextTasks = studyTasks.map((task) =>
+      task.examId === examId ? { ...task, examId: undefined, updatedAt: now() } : task
+    );
+    setStudyTasks(nextTasks);
+    setLocalStudyTasks(nextTasks);
+  }
+
   return (
     <PersonalDataContext.Provider
       value={{
@@ -351,12 +401,18 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
         notes,
         caseAnswers,
         testAttempts,
+        studyTasks,
+        exams,
         updateTopicStatus,
         markTopicOpened,
         saveNote,
         deleteNote,
         saveCaseAnswer,
         saveTestAttempt,
+        saveStudyTask,
+        deleteStudyTask,
+        saveExam,
+        deleteExam,
         refresh
       }}
     >

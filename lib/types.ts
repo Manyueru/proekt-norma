@@ -210,3 +210,120 @@ export interface TestAttempt {
   total: number;
   completedAt: string;
 }
+
+export type StudyTaskStatus = "not-started" | "in-progress" | "waiting" | "completed";
+export type StudyTaskPriority = "low" | "normal" | "high";
+export type StudyTaskType =
+  | "essay"
+  | "report"
+  | "presentation"
+  | "test"
+  | "practice"
+  | "exam-prep"
+  | "reading"
+  | "other";
+
+export const STUDY_TASK_STATUS_LABELS: Record<StudyTaskStatus, string> = {
+  "not-started": "Не начато",
+  "in-progress": "В работе",
+  waiting: "Жду проверки",
+  completed: "Выполнено"
+};
+
+export const STUDY_TASK_PRIORITY_LABELS: Record<StudyTaskPriority, string> = {
+  low: "Низкий",
+  normal: "Обычный",
+  high: "Высокий"
+};
+
+export const STUDY_TASK_TYPE_LABELS: Record<StudyTaskType, string> = {
+  essay: "Реферат",
+  report: "Доклад",
+  presentation: "Презентация",
+  test: "Контрольная",
+  practice: "Практическая работа",
+  "exam-prep": "Подготовка к экзамену",
+  reading: "Чтение",
+  other: "Другое"
+};
+
+export interface StudyTaskSubtask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface StudyTask {
+  id: string;
+  title: string;
+  description: string;
+  discipline: string;
+  teacher: string;
+  type: StudyTaskType;
+  dueAt: string;
+  priority: StudyTaskPriority;
+  status: StudyTaskStatus;
+  examId?: string;
+  topicSlugs: string[];
+  subtasks: StudyTaskSubtask[];
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+}
+
+export type ExamFormat = "oral" | "written" | "test" | "mixed";
+export type ExamQuestionStatus =
+  | "not-started"
+  | "read"
+  | "understand"
+  | "with-prompt"
+  | "independent"
+  | "review"
+  | "mastered";
+
+export const EXAM_FORMAT_LABELS: Record<ExamFormat, string> = {
+  oral: "Устный",
+  written: "Письменный",
+  test: "Тест",
+  mixed: "Смешанный"
+};
+
+export const EXAM_QUESTION_STATUS_LABELS: Record<ExamQuestionStatus, string> = {
+  "not-started": "Не начато",
+  read: "Прочитано",
+  understand: "Понимаю",
+  "with-prompt": "Отвечаю с подсказкой",
+  independent: "Отвечаю самостоятельно",
+  review: "Нужно повторить",
+  mastered: "Освоено"
+};
+
+export interface ExamQuestion {
+  id: string;
+  title: string;
+  shortAnswer: string;
+  fullAnswer: string;
+  outline: string;
+  keyTerms: string;
+  commonMistakes: string;
+  teacherQuestions: string;
+  status: ExamQuestionStatus;
+  lastReviewedAt?: string;
+  reviewDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Exam {
+  id: string;
+  title: string;
+  discipline: string;
+  teacher: string;
+  date: string;
+  format: ExamFormat;
+  questionsPerTicket: number;
+  notes: string;
+  questions: ExamQuestion[];
+  createdAt: string;
+  updatedAt: string;
+}

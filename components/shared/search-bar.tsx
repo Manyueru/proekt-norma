@@ -10,7 +10,7 @@ import { usePersonalData } from "@/components/providers/personal-data-provider";
 
 export function SearchBar() {
   const [query, setQuery] = useState("");
-  const { notes } = usePersonalData();
+  const { notes, studyTasks, exams } = usePersonalData();
 
   const results = useMemo(() => {
     const staticResults = search(query);
@@ -24,8 +24,24 @@ export function SearchBar() {
         subtitle: note.body || note.mainIdea || note.keyFacts || "Личный конспект",
         href: `/notes?note=${note.id}`
       }));
-    return [...noteResults, ...staticResults];
-  }, [notes, query]);
+    const taskResults: SearchResult[] = studyTasks
+      .filter((task) => `${task.title} ${task.description} ${task.discipline} ${task.teacher}`.toLowerCase().includes(normalized))
+      .map((task) => ({
+        type: "study-task",
+        title: task.title,
+        subtitle: task.discipline || "Учебная задача",
+        href: "/study-tasks"
+      }));
+    const examResults: SearchResult[] = exams
+      .filter((exam) => `${exam.title} ${exam.discipline} ${exam.teacher} ${exam.questions.map((question) => question.title).join(" ")}`.toLowerCase().includes(normalized))
+      .map((exam) => ({
+        type: "exam",
+        title: exam.title,
+        subtitle: exam.discipline || "Подготовка к экзамену",
+        href: `/exams/${exam.id}`
+      }));
+    return [...taskResults, ...examResults, ...noteResults, ...staticResults];
+  }, [exams, notes, query, studyTasks]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -33,7 +49,7 @@ export function SearchBar() {
         <SearchIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-c" />
         <Input
           className="pl-9"
-          placeholder="Темы, термины, источники, задачи и личные конспекты"
+          placeholder="Темы, экзамены, дедлайны, источники и конспекты"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           autoFocus

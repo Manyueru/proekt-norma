@@ -16,7 +16,7 @@ import { ProgressBar } from "@/components/shared/progress-bar";
 
 export function AccountDashboard() {
   const { user, profile, signOut, updateProfile, configured } = useAuth();
-  const { progress, notes, caseAnswers, testAttempts, storageMode } = usePersonalData();
+  const { progress, notes, caseAnswers, testAttempts, studyTasks, exams, storageMode } = usePersonalData();
   const [name, setName] = useState(profile?.displayName || "");
   const [message, setMessage] = useState<string | null>(null);
 
@@ -36,7 +36,7 @@ export function AccountDashboard() {
     return Array.from(byQuiz.values());
   }, [testAttempts]);
 
-  if (!user) {
+  if (!user && configured) {
     return (
       <div className="flex flex-col gap-6">
         <div>
@@ -81,22 +81,34 @@ export function AccountDashboard() {
             {storageMode === "cloud" ? "Данные синхронизируются с аккаунтом." : "Сейчас используются локальные данные браузера."}
           </p>
         </div>
-        <Button variant="ghost" onClick={() => void signOut()}><LogOut size={16} />Выйти</Button>
+        {user && <Button variant="ghost" onClick={() => void signOut()}><LogOut size={16} />Выйти</Button>}
       </div>
 
-      <Card className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-        <FormField label="Имя в профиле" hint="Используется только для приветствия в личном кабинете.">
-          <Input value={name} onChange={(event) => setName(event.target.value)} />
-        </FormField>
-        <Button variant="primary" onClick={() => void saveName()}><Save size={16} />Сохранить</Button>
-        {message && <p className="text-xs text-muted-c sm:col-span-2" role="status">{message}</p>}
-      </Card>
+      {user ? (
+        <Card className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+          <FormField label="Имя в профиле" hint="Используется только для приветствия в личном кабинете.">
+            <Input value={name} onChange={(event) => setName(event.target.value)} />
+          </FormField>
+          <Button variant="primary" onClick={() => void saveName()}><Save size={16} />Сохранить</Button>
+          {message && <p className="text-xs text-muted-c sm:col-span-2" role="status">{message}</p>}
+        </Card>
+      ) : (
+        <Card className="flex items-start gap-3 border-accent-violet/20 bg-accent-violet/5">
+          <div className="rounded-full bg-accent-violet/10 p-3 text-accent-violet"><UserRound size={22} /></div>
+          <div>
+            <h2 className="text-base font-medium">Локальный личный кабинет</h2>
+            <p className="mt-1 text-sm leading-6 text-muted-c">Прогресс, дедлайны и экзамены работают без регистрации, но пока сохраняются только в этом браузере. Синхронизацию подключим после выбора сервиса, стабильно доступного в России.</p>
+          </div>
+        </Card>
+      )}
 
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <Card className="p-4"><p className="text-xs text-muted-c">Общий прогресс</p><p className="mt-1 text-2xl font-medium">{overall}%</p><div className="mt-2"><ProgressBar value={overall} /></div></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Конспекты</p><p className="mt-1 text-2xl font-medium">{notes.length}</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Решённые задачи</p><p className="mt-1 text-2xl font-medium">{solvedCases}</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Пройденные тесты</p><p className="mt-1 text-2xl font-medium">{bestTests.length}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-c">Активные дедлайны</p><p className="mt-1 text-2xl font-medium">{studyTasks.filter((task) => task.status !== "completed").length}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-c">Экзамены</p><p className="mt-1 text-2xl font-medium">{exams.length}</p></Card>
       </section>
 
       {current && (

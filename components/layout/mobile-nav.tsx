@@ -13,7 +13,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 export function MobileNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { user, profile } = useAuth();
+  const { user, profile, configured } = useAuth();
 
   return (
     <>
@@ -61,7 +61,7 @@ export function MobileNav() {
               <div>
                 <p className="text-sm font-medium">Все разделы</p>
                 <p className="text-xs text-muted-c mt-0.5">
-                  {user ? profile?.displayName || user.email : "Гостевой режим"}
+                  {user ? profile?.displayName || user.email : configured ? "Гостевой режим" : "Локальный режим"}
                 </p>
               </div>
               <button

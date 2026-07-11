@@ -2,7 +2,9 @@
 
 import type {
   ClinicalCaseAnswer,
+  Exam,
   Note,
+  StudyTask,
   TestAttempt,
   TopicProgressRecord,
   TopicStatus
@@ -12,7 +14,9 @@ const KEYS = {
   progress: "norma:v2:progress",
   notes: "norma:v2:notes",
   cases: "norma:v2:case-answers",
-  tests: "norma:v2:test-attempts"
+  tests: "norma:v2:test-attempts",
+  studyTasks: "norma:v3:study-tasks",
+  exams: "norma:v3:exams"
 };
 
 const LEGACY_PROGRESS_KEY = "norma:progress";
@@ -132,6 +136,23 @@ export function setLocalTestAttempts(attempts: TestAttempt[]) {
   write(KEYS.tests, attempts);
 }
 
+
+export function getLocalStudyTasks(): StudyTask[] {
+  return read<StudyTask[]>(KEYS.studyTasks, []);
+}
+
+export function setLocalStudyTasks(tasks: StudyTask[]) {
+  write(KEYS.studyTasks, tasks);
+}
+
+export function getLocalExams(): Exam[] {
+  return read<Exam[]>(KEYS.exams, []);
+}
+
+export function setLocalExams(exams: Exam[]) {
+  write(KEYS.exams, exams);
+}
+
 export interface LocalBackupV2 {
   version: 2;
   exportedAt: string;
@@ -141,22 +162,39 @@ export interface LocalBackupV2 {
   testAttempts: TestAttempt[];
 }
 
-export function createLocalBackup(): LocalBackupV2 {
+export interface LocalBackupV3 {
+  version: 3;
+  exportedAt: string;
+  progress: Record<string, TopicProgressRecord>;
+  notes: Note[];
+  caseAnswers: Record<string, ClinicalCaseAnswer>;
+  testAttempts: TestAttempt[];
+  studyTasks: StudyTask[];
+  exams: Exam[];
+}
+
+export function createLocalBackup(): LocalBackupV3 {
   return {
-    version: 2,
+    version: 3,
     exportedAt: now(),
     progress: getLocalProgress(),
     notes: getLocalNotes(),
     caseAnswers: getLocalCaseAnswers(),
-    testAttempts: getLocalTestAttempts()
+    testAttempts: getLocalTestAttempts(),
+    studyTasks: getLocalStudyTasks(),
+    exams: getLocalExams()
   };
 }
 
-export function restoreLocalBackup(backup: LocalBackupV2) {
+export function restoreLocalBackup(backup: LocalBackupV2 | LocalBackupV3) {
   write(KEYS.progress, backup.progress);
   write(KEYS.notes, backup.notes);
   write(KEYS.cases, backup.caseAnswers);
   write(KEYS.tests, backup.testAttempts);
+  if (backup.version === 3) {
+    write(KEYS.studyTasks, backup.studyTasks);
+    write(KEYS.exams, backup.exams);
+  }
 }
 
 export function resetLocalData() {

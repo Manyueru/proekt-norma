@@ -9,7 +9,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { usePersonalData } from "@/components/providers/personal-data-provider";
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, configured } = useAuth();
   const { syncError, storageMode } = usePersonalData();
 
   return (
@@ -23,10 +23,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           <div className="flex items-center gap-1">
             <Link
-              href={user ? "/account" : "/auth/login"}
+              href={user || !configured ? "/account" : "/auth/login"}
               className="rounded-lg px-2 py-2 text-xs text-muted-c hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
             >
-              {user ? "Кабинет" : "Войти"}
+              {user || !configured ? "Кабинет" : "Войти"}
             </Link>
             <ThemeToggle compact />
           </div>
@@ -34,7 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         {(syncError || (!user && storageMode === "local")) && (
           <div className="border-b border-c bg-accent-violet/10 px-4 py-2 text-center text-xs text-muted-c md:px-8">
-            {syncError || "Гостевой режим: данные сохраняются только в этом браузере. Войдите, чтобы синхронизировать их между устройствами."}
+            {syncError || (configured ? "Гостевой режим: данные сохраняются только в этом браузере. Войдите, чтобы синхронизировать их между устройствами." : "Локальный режим: данные сохраняются только в этом браузере. Синхронизацию подключим после выбора сервиса, стабильно доступного в России.")}
           </div>
         )}
 

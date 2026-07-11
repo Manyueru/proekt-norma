@@ -10,7 +10,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user, profile } = useAuth();
+  const { user, profile, configured } = useAuth();
 
   return (
     <aside className="hidden md:flex md:w-60 md:flex-col md:gap-5 border-r border-c bg-surface px-4 py-6 md:h-screen md:sticky md:top-0">
@@ -47,8 +47,8 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-auto flex flex-col gap-2 border-t border-c pt-4 px-2">
-        <Link href={user ? "/account" : "/auth/login"} className="text-xs text-muted-c hover:text-accent-blue">
-          {user ? profile?.displayName || user.email : "Войти для синхронизации"}
+        <Link href={user || !configured ? "/account" : "/auth/login"} className="text-xs text-muted-c hover:text-accent-blue">
+          {user ? profile?.displayName || user.email : configured ? "Войти для синхронизации" : "Локальный кабинет"}
         </Link>
         <ThemeToggle />
       </div>

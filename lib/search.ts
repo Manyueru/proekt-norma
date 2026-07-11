@@ -8,7 +8,9 @@ export type SearchResultType =
   | "case"
   | "term"
   | "video"
-  | "note";
+  | "note"
+  | "study-task"
+  | "exam";
 
 export interface SearchResult {
   type: SearchResultType;
@@ -24,7 +26,9 @@ const typeLabels: Record<SearchResultType, string> = {
   case: "Задача",
   term: "Термин",
   video: "Видео",
-  note: "Конспект"
+  note: "Конспект",
+  "study-task": "Дедлайн",
+  exam: "Экзамен"
 };
 
 export { typeLabels };
