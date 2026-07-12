@@ -29,7 +29,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto px-5 pb-6">
+      <nav className="sidebar-scroll flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto px-5 pb-6">
         {NAV_GROUPS.map((group, groupIndex) => (
           <div key={group.label ?? "main"} className={cn(groupIndex > 0 && "pt-0.5")}>
             {group.label && (

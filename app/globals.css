@@ -93,6 +93,18 @@ select {
   color: rgb(var(--sidebar-fg));
 }
 
+
+.sidebar-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 .mobile-bottom-nav {
   border-top: 1px solid rgb(var(--border-c));
   background: rgb(var(--card) / 0.94);
