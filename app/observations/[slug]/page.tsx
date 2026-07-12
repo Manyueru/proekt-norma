@@ -25,7 +25,7 @@ export default async function ObservationPage({ params }: { params: Promise<{ sl
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-medium">{observation.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">{observation.title}</h1>
         <p className="text-xs text-muted-c mt-1">{observation.ageRange}</p>
       </div>
 

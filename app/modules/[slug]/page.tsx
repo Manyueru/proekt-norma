@@ -45,7 +45,7 @@ export default async function TopicPage({ params }: { params: Promise<{ slug: st
       <div>
         <p className="text-xs text-muted-c mb-2">{TRACK_LABELS[topic.track]}</p>
         <div className="flex items-start justify-between gap-4 flex-wrap">
-          <h1 className="text-xl font-medium">{topic.title}</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">{topic.title}</h1>
           <TopicProgressControls slug={topic.slug} />
         </div>
         <p className="text-xs text-muted-c mt-2">Обновлено {topic.updatedAt}</p>

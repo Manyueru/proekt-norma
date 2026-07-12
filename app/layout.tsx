@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Проект Норма",
   description:
-    "Персональная образовательная платформа по развитию ребёнка, логопедии и нейропсихологии"
+    "Учебная платформа по логопедии, нейропсихологии, клинической насмотренности и развитию ребёнка"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

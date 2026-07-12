@@ -23,7 +23,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-medium">{clinicalCase.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">{clinicalCase.title}</h1>
         <p className="text-xs text-muted-c mt-1">Возраст: {clinicalCase.age}</p>
       </div>
 

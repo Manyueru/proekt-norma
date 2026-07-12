@@ -7,28 +7,32 @@ const config: Config = {
     extend: {
       colors: {
         cream: {
-          DEFAULT: "#FAF8F3",
-          dark: "#171613"
+          DEFAULT: "rgb(var(--bg) / <alpha-value>)",
+          dark: "rgb(var(--bg) / <alpha-value>)"
         },
         ink: {
-          DEFAULT: "#2E2C28",
-          dark: "#EDEAE2"
+          DEFAULT: "rgb(var(--fg) / <alpha-value>)",
+          dark: "rgb(var(--fg) / <alpha-value>)"
         },
         accent: {
-          blue: "#5B7FA6",
-          sage: "#7A9186",
-          violet: "#9A87B8"
+          blue: "rgb(var(--accent) / <alpha-value>)",
+          sage: "#748B78",
+          violet: "rgb(var(--accent) / <alpha-value>)"
         },
         border: {
-          DEFAULT: "#E4E0D6",
-          dark: "#33312B"
+          DEFAULT: "rgb(var(--border-c) / <alpha-value>)",
+          dark: "rgb(var(--border-c) / <alpha-value>)"
         }
       },
       fontFamily: {
-        sans: ["Inter", "Manrope", "system-ui", "sans-serif"]
+        sans: ["Instrument Sans", "Manrope", "Inter", "system-ui", "sans-serif"],
+        display: ["Manrope", "Instrument Sans", "Inter", "system-ui", "sans-serif"]
       },
       borderRadius: {
-        card: "12px"
+        card: "16px"
+      },
+      boxShadow: {
+        quiet: "0 16px 50px -42px rgba(28, 30, 35, 0.32)"
       }
     }
   },

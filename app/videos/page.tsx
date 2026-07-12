@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 
 export default function VideosPage() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-xl font-medium">Видеотека</h1>
-        <p className="text-sm text-muted-c mt-1">Видео с разбором и указанием, на что обращать внимание</p>
+        <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">Видеотека</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-c">Видео с разбором и указанием, на что обращать внимание</p>
       </div>
       <div className="rounded-xl border border-c bg-surface p-4 text-sm text-muted-c">
         Демонстрационные карточки без проверенной ссылки помечены как заглушки. Они не являются источниками для диагностики.

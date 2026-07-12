@@ -40,12 +40,12 @@ export function AccountDashboard() {
     return (
       <div className="flex flex-col gap-6">
         <div>
-          <h1 className="text-xl font-medium">Личный кабинет</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">Личный кабинет</h1>
           <p className="mt-1 text-sm text-muted-c">Здесь будет храниться ваш прогресс, конспекты и результаты.</p>
         </div>
         <Card className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
-            <div className="rounded-full bg-accent-blue/10 p-3 text-accent-blue"><UserRound size={22} /></div>
+            <div className="rounded-xl border border-c bg-surface-2 p-3 text-accent-blue"><UserRound size={22} /></div>
             <div>
               <h2 className="text-base font-medium">Войдите в аккаунт</h2>
               <p className="mt-1 text-sm leading-6 text-muted-c">
@@ -76,7 +76,7 @@ export function AccountDashboard() {
     <div className="flex flex-col gap-7">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-medium">Личный кабинет</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">Личный кабинет</h1>
           <p className="mt-1 text-sm text-muted-c">
             {storageMode === "cloud" ? "Данные синхронизируются с аккаунтом." : "Сейчас используются локальные данные браузера."}
           </p>
@@ -93,8 +93,8 @@ export function AccountDashboard() {
           {message && <p className="text-xs text-muted-c sm:col-span-2" role="status">{message}</p>}
         </Card>
       ) : (
-        <Card className="flex items-start gap-3 border-accent-violet/20 bg-accent-violet/5">
-          <div className="rounded-full bg-accent-violet/10 p-3 text-accent-violet"><UserRound size={22} /></div>
+        <Card className="flex items-start gap-3 border-c bg-surface">
+          <div className="rounded-xl border border-c bg-surface-2 p-3 text-accent-blue"><UserRound size={22} /></div>
           <div>
             <h2 className="text-base font-medium">Локальный личный кабинет</h2>
             <p className="mt-1 text-sm leading-6 text-muted-c">Прогресс, дедлайны и экзамены работают без регистрации, но пока сохраняются только в этом браузере. Синхронизацию подключим после выбора сервиса, стабильно доступного в России.</p>

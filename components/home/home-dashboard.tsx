@@ -1,24 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, CalendarClock, GraduationCap, LogIn, PlayCircle, RotateCcw } from "lucide-react";
+import { ArrowRight, Check, Search } from "lucide-react";
 import { topics } from "@/lib/data";
-import { TRACK_LABELS } from "@/lib/types";
-import { getCurrentTopic, getOverallProgress, getRecommendedTopic } from "@/lib/progress";
+import { TRACK_LABELS, type Track } from "@/lib/types";
+import { getCurrentTopic, getOverallProgress, getTrackProgress } from "@/lib/progress";
 import { daysUntil, formatDate, formatDateTime, getDeadlineInfo, getExamProgress, sortStudyTasks } from "@/lib/study-planner";
-import { useAuth } from "@/components/providers/auth-provider";
 import { usePersonalData } from "@/components/providers/personal-data-provider";
 import { StatusBadge } from "@/components/topic/status-badge";
 import { ProgressBar } from "@/components/shared/progress-bar";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+const FEATURED_TRACKS: Track[] = ["speech-therapy", "neuropsychology", "child-development"];
+
+const QUICK_LINKS = [
+  ["/modules", "Учебные модули"],
+  ["/exams", "Экзамены"],
+  ["/study-tasks", "Учебные задачи"],
+  ["/notes", "Конспекты"],
+  ["/observations", "Клиническая насмотренность"],
+  ["/sources", "Источники"]
+] as const;
+
 export function HomeDashboard() {
-  const { user, profile, configured } = useAuth();
-  const { progress, notes, studyTasks, exams, saveStudyTask, loading } = usePersonalData();
+  const {
+    progress,
+    notes,
+    studyTasks,
+    exams,
+    saveStudyTask,
+    loading
+  } = usePersonalData();
+
   const hasStarted = Object.values(progress).some((record) => record.status !== "not-started");
   const current = getCurrentTopic(topics, progress);
-  const recommended = getRecommendedTopic(topics);
   const toReview = topics.filter((topic) => progress[topic.slug]?.status === "review");
   const mastered = topics.filter((topic) => progress[topic.slug]?.status === "mastered").length;
   const overall = getOverallProgress(topics, progress);
@@ -28,212 +43,223 @@ export function HomeDashboard() {
       (progress[b.slug]?.lastOpenedAt || "").localeCompare(progress[a.slug]?.lastOpenedAt || "")
     )
     .slice(0, 3);
-  const upcomingTasks = sortStudyTasks(studyTasks.filter((task) => task.status !== "completed")).slice(0, 4);
+  const upcomingTasks = sortStudyTasks(studyTasks.filter((task) => task.status !== "completed"));
+  const nearestTask = upcomingTasks[0];
   const nearestExam = [...exams]
     .filter((exam) => daysUntil(exam.date) >= 0)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+  const trackProgress = FEATURED_TRACKS.map((track) => ({
+    track,
+    ...getTrackProgress(topics, progress, track)
+  }));
 
   if (loading) return <p className="text-sm text-muted-c">Загружаем учебные данные…</p>;
 
   return (
-    <div className="flex flex-col gap-8">
-      <section className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-xl font-medium">
-            {user ? `Добро пожаловать, ${profile?.displayName || "пользователь"}` : "Добро пожаловать в проект «Норма»"}
-          </h1>
-          <p className="text-sm text-muted-c mt-1 max-w-2xl leading-6">
-            Системное изучение развития ребёнка, логопедии, нейропсихологии и клинической насмотренности.
+    <div className="flex flex-col gap-11 md:gap-14">
+      <section className="min-h-[230px] border-b border-c pb-8 md:min-h-[300px] md:pb-10">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <p className="max-w-xl text-[15px] leading-7 text-muted-c md:text-base">
+            Учебная платформа по логопедии, нейропсихологии, клинической насмотренности и развитию ребёнка.
           </p>
-        </div>
-        {!user && (
-          <Link href={configured ? "/auth/login" : "/account"}>
-            <Button>
-              <LogIn size={16} />
-              {configured ? "Войти для синхронизации" : "Открыть личный кабинет"}
-            </Button>
+          <Link
+            href="/search"
+            className="flex w-full max-w-xs items-center justify-between rounded-xl border border-c bg-surface px-4 py-3 text-sm text-muted-c hover:border-accent-blue/45"
+          >
+            <span>Поиск по материалам</span>
+            <Search size={16} strokeWidth={1.7} />
           </Link>
-        )}
+        </div>
       </section>
 
-      {!hasStarted ? (
-        <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs text-muted-c">Рекомендуемый первый шаг</p>
-            <h2 className="mt-1 text-base font-medium">{recommended?.title}</h2>
-            <p className="mt-1 max-w-xl text-sm leading-6 text-muted-c">
-              Начните с одного пробного модуля: прочитайте материал, сделайте конспект и проверьте себя.
-            </p>
-          </div>
-          {recommended && (
-            <Link href={`/modules/${recommended.slug}`}>
-              <Button variant="primary" className="whitespace-nowrap">
-                <PlayCircle size={16} />
-                Начать обучение
-              </Button>
-            </Link>
-          )}
-        </Card>
-      ) : current ? (
-        <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs text-muted-c">Текущая тема</p>
-            <p className="text-[15px] font-medium mt-0.5">{current.title}</p>
-            <p className="text-xs text-muted-c mt-0.5">{TRACK_LABELS[current.track]}</p>
-            <div className="mt-2"><StatusBadge status={progress[current.slug]?.status ?? "not-started"} /></div>
+      {current ? (
+        <section className="premium-panel flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between md:p-7">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">Продолжить обучение</p>
+            <h1 className="mt-2 text-xl font-semibold tracking-[-0.03em] md:text-2xl">{current.title}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <p className="text-sm text-muted-c">{TRACK_LABELS[current.track]}</p>
+              <StatusBadge status={progress[current.slug]?.status ?? "not-started"} />
+            </div>
           </div>
           <Link href={`/modules/${current.slug}`}>
-            <Button variant="primary">
-              <PlayCircle size={16} />
-              Продолжить обучение
+            <Button variant="primary" className="w-full sm:w-auto">
+              Открыть тему
+              <ArrowRight size={15} strokeWidth={1.8} />
             </Button>
           </Link>
-        </Card>
-      ) : (
-        <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        </section>
+      ) : hasStarted ? (
+        <section className="premium-panel flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between md:p-7">
           <div>
-            <h2 className="text-base font-medium">Все начатые темы завершены</h2>
-            <p className="text-sm text-muted-c mt-1">Выберите следующий модуль или вернитесь к материалу для повторения.</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">Обучение</p>
+            <h2 className="mt-2 text-lg font-semibold">Все начатые темы завершены</h2>
+            <p className="mt-2 text-sm leading-6 text-muted-c">Можно выбрать следующую тему или вернуться к материалам для повторения.</p>
           </div>
-          <Link href="/modules"><Button variant="primary">Выбрать следующую тему <ArrowRight size={16} /></Button></Link>
-        </Card>
-      )}
+          <Link href="/modules"><Button variant="primary">Открыть модули <ArrowRight size={15} /></Button></Link>
+        </section>
+      ) : null}
 
-      <section className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-        <Card className="flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2"><CalendarClock size={17} className="text-accent-blue" /><h2 className="text-sm font-medium">Ближайшие дедлайны</h2></div>
-            <Link href="/study-tasks" className="text-xs text-accent-blue hover:underline">Показать все</Link>
+      <section>
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">На сегодня</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em]">Актуальное</h2>
           </div>
-          <div className="flex flex-col gap-2">
-            {upcomingTasks.map((task) => {
-              const deadline = getDeadlineInfo(task);
+        </div>
+
+        <div className="grid border-y border-c md:grid-cols-3">
+          <div className="py-6 md:pr-7">
+            <p className="text-xs text-muted-c">Ближайший дедлайн</p>
+            {nearestTask ? (() => {
+              const deadline = getDeadlineInfo(nearestTask);
               return (
-                <div key={task.id} className={`flex flex-col gap-2 rounded-lg border px-3 py-3 sm:flex-row sm:items-center sm:justify-between ${deadline.className}`}>
-                  <div>
-                    <p className="text-sm font-medium">{task.title}</p>
-                    <p className="mt-1 text-xs text-muted-c">{formatDateTime(task.dueAt)}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
+                <div className="mt-3">
+                  <Link href="/study-tasks" className="text-[15px] font-semibold hover:text-accent-blue">{nearestTask.title}</Link>
+                  <p className="mt-1 text-xs text-muted-c">{formatDateTime(nearestTask.dueAt)}</p>
+                  <div className="mt-4 flex flex-wrap items-center gap-3">
                     <span className={`text-xs font-medium ${deadline.textClassName}`}>{deadline.label}</span>
-                    <Button
-                      size="sm"
-                      onClick={() => void saveStudyTask({ ...task, status: "completed", completedAt: new Date().toISOString(), updatedAt: new Date().toISOString() })}
+                    <button
+                      type="button"
+                      onClick={() => void saveStudyTask({ ...nearestTask, status: "completed", completedAt: new Date().toISOString(), updatedAt: new Date().toISOString() })}
+                      className="inline-flex items-center gap-1 text-xs text-muted-c hover:text-accent-blue"
                     >
-                      Готово
-                    </Button>
+                      <Check size={13} /> Готово
+                    </button>
                   </div>
                 </div>
               );
-            })}
-            {!upcomingTasks.length && <p className="text-sm text-muted-c">Ближайших дедлайнов нет. Можно немного выдохнуть.</p>}
+            })() : (
+              <div className="mt-3">
+                <p className="text-sm text-muted-c">Ближайших задач нет.</p>
+                <Link href="/study-tasks" className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent-blue">Добавить задачу <ArrowRight size={13} /></Link>
+              </div>
+            )}
           </div>
-          <Link href="/study-tasks"><Button className="w-fit"><CalendarClock size={15} />Добавить учебную задачу</Button></Link>
-        </Card>
 
-        <Card className="flex flex-col gap-4">
-          <div className="flex items-center gap-2"><GraduationCap size={18} className="text-accent-violet" /><h2 className="text-sm font-medium">Ближайший экзамен</h2></div>
-          {nearestExam ? (() => {
-            const examProgress = getExamProgress(nearestExam);
-            const days = daysUntil(nearestExam.date);
-            return (
-              <>
-                <div>
-                  <p className="text-base font-medium">{nearestExam.title}</p>
-                  <p className="mt-1 text-sm text-muted-c">{formatDate(nearestExam.date)} · {days === 0 ? "сегодня" : `через ${days} дн.`}</p>
+          <div className="border-t border-c py-6 md:border-l md:border-t-0 md:px-7">
+            <p className="text-xs text-muted-c">Ближайший экзамен</p>
+            {nearestExam ? (() => {
+              const examProgress = getExamProgress(nearestExam);
+              const days = daysUntil(nearestExam.date);
+              return (
+                <div className="mt-3">
+                  <Link href={`/exams/${nearestExam.id}`} className="text-[15px] font-semibold hover:text-accent-blue">{nearestExam.title}</Link>
+                  <p className="mt-1 text-xs text-muted-c">{formatDate(nearestExam.date)} · {days === 0 ? "сегодня" : `через ${days} дн.`}</p>
+                  <div className="mt-4">
+                    <div className="mb-2 flex items-center justify-between text-[11px] text-muted-c">
+                      <span>Освоено</span><span>{examProgress.mastered} из {examProgress.total}</span>
+                    </div>
+                    <ProgressBar value={examProgress.percent} />
+                  </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between gap-3 text-xs text-muted-c"><span>Освоено вопросов</span><span>{examProgress.mastered} из {examProgress.total}</span></div>
-                  <div className="mt-2"><ProgressBar value={examProgress.percent} /></div>
-                </div>
-                <Link href={`/exams/${nearestExam.id}`}><Button variant="primary" className="w-fit">Продолжить подготовку</Button></Link>
-              </>
-            );
-          })() : (
-            <>
-              <p className="text-sm leading-6 text-muted-c">Добавьте экзамен, дату и список вопросов — сайт рассчитает темп подготовки.</p>
-              <Link href="/exams"><Button className="w-fit"><GraduationCap size={15} />Добавить экзамен</Button></Link>
-            </>
-          )}
-        </Card>
-      </section>
-
-      <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <Card className="p-4">
-          <p className="text-xs text-muted-c">Общий прогресс</p>
-          <p className="text-2xl font-medium mt-1">{overall}%</p>
-          <div className="mt-2"><ProgressBar value={overall} /></div>
-        </Card>
-        <Card className="p-4">
-          <p className="text-xs text-muted-c">Тем освоено</p>
-          <p className="text-2xl font-medium mt-1">{mastered} <span className="text-sm text-muted-c font-normal">из {topics.length}</span></p>
-        </Card>
-        <Card className="p-4">
-          <p className="text-xs text-muted-c">К повторению</p>
-          <p className="text-2xl font-medium mt-1">{toReview.length}</p>
-        </Card>
-      </section>
-
-      {toReview.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center gap-2"><RotateCcw size={16} className="text-accent-violet" /><h2 className="text-sm font-medium">Темы для повторения</h2></div>
-          <div className="flex gap-2 flex-wrap">
-            {toReview.map((topic) => (
-              <Link key={topic.slug} href={`/modules/${topic.slug}`} className="text-xs rounded-lg border border-c px-3 py-2 text-muted-c hover:border-accent-blue/40">
-                {topic.title}
-              </Link>
-            ))}
+              );
+            })() : (
+              <div className="mt-3">
+                <p className="text-sm text-muted-c">Экзамены пока не добавлены.</p>
+                <Link href="/exams" className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent-blue">Добавить экзамен <ArrowRight size={13} /></Link>
+              </div>
+            )}
           </div>
-        </section>
-      )}
 
-      <section className="grid gap-5 lg:grid-cols-2">
-        <div>
-          <h2 className="text-sm font-medium mb-3">Недавно открытые темы</h2>
-          <div className="flex flex-col gap-2">
-            {recentTopics.length ? recentTopics.map((topic) => (
-              <Link key={topic.slug} href={`/modules/${topic.slug}`} className="flex items-center justify-between rounded-lg border border-c px-4 py-3 text-sm hover:border-accent-blue/40">
-                <span>{topic.title}</span><StatusBadge status={progress[topic.slug]?.status ?? "not-started"} />
-              </Link>
-            )) : <p className="text-sm text-muted-c">Здесь появятся темы после первого открытия.</p>}
+          <div className="border-t border-c py-6 md:border-l md:border-t-0 md:pl-7">
+            <p className="text-xs text-muted-c">Общий прогресс</p>
+            <p className="mt-3 text-3xl font-semibold tracking-[-0.04em]">{overall}%</p>
+            <div className="mt-4"><ProgressBar value={overall} /></div>
+            <p className="mt-3 text-xs text-muted-c">Освоено {mastered} из {topics.length} тем</p>
           </div>
         </div>
+      </section>
+
+      <section className="grid gap-9 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
         <div>
-          <h2 className="text-sm font-medium mb-3">Последние конспекты</h2>
-          <div className="flex flex-col gap-2">
+          <div className="mb-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">Динамика</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em]">Моё обучение</h2>
+          </div>
+
+          <div className="space-y-5 border-y border-c py-6">
+            {trackProgress.map((item) => (
+              <div key={item.track}>
+                <div className="mb-2 flex items-center justify-between gap-4 text-sm">
+                  <span>{TRACK_LABELS[item.track]}</span>
+                  <span className="text-xs text-muted-c">{item.percent}%</span>
+                </div>
+                <ProgressBar value={item.percent} />
+              </div>
+            ))}
+          </div>
+
+          {!hasStarted && (
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-c">Вы пока не начали обучение.</p>
+              <Link href="/modules" className="inline-flex items-center gap-1 text-sm font-medium text-accent-blue">Открыть модули <ArrowRight size={14} /></Link>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <div className="mb-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">Вернуться</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em]">Повторение</h2>
+          </div>
+
+          <div className="divide-y divide-[rgb(var(--border-c))] border-y border-c">
+            {toReview.slice(0, 4).map((topic) => (
+              <Link key={topic.slug} href={`/modules/${topic.slug}`} className="flex items-center justify-between gap-4 py-4 text-sm hover:text-accent-blue">
+                <span>{topic.title}</span><ArrowRight size={14} className="shrink-0 text-muted-c" />
+              </Link>
+            ))}
+            {!toReview.length && <p className="py-5 text-sm text-muted-c">Материалов для повторения пока нет.</p>}
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-9 lg:grid-cols-2 lg:gap-12">
+        <div>
+          <h2 className="mb-4 text-base font-semibold">Недавно открытые темы</h2>
+          <div className="divide-y divide-[rgb(var(--border-c))] border-y border-c">
+            {recentTopics.length ? recentTopics.map((topic) => (
+              <Link key={topic.slug} href={`/modules/${topic.slug}`} className="flex items-center justify-between gap-4 py-4 text-sm hover:text-accent-blue">
+                <span>{topic.title}</span>
+                <StatusBadge status={progress[topic.slug]?.status ?? "not-started"} />
+              </Link>
+            )) : <p className="py-5 text-sm text-muted-c">Здесь появятся темы после первого открытия.</p>}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-4 text-base font-semibold">Последние конспекты</h2>
+          <div className="divide-y divide-[rgb(var(--border-c))] border-y border-c">
             {notes.slice(0, 3).map((note) => (
-              <Link key={note.id} href={`/notes?note=${note.id}`} className="rounded-lg border border-c px-4 py-3 hover:border-accent-blue/40">
+              <Link key={note.id} href={`/notes?note=${note.id}`} className="block py-4 hover:text-accent-blue">
                 <p className="text-sm font-medium">{note.title}</p>
                 <p className="mt-1 text-xs text-muted-c">Обновлён {new Date(note.updatedAt).toLocaleDateString("ru-RU")}</p>
               </Link>
             ))}
-            {!notes.length && <p className="text-sm text-muted-c">Конспектов пока нет.</p>}
+            {!notes.length && <p className="py-5 text-sm text-muted-c">Конспектов пока нет.</p>}
           </div>
         </div>
       </section>
 
       <section>
-        <h2 className="text-sm font-medium mb-3">Быстрые переходы</h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {[
-            ["/modules", "Модули"], ["/exams", "Экзамены"], ["/study-tasks", "Дедлайны"], ["/observations", "Насмотренность"], ["/cases", "Клинические задачи"],
-            ["/sources", "Источники"], ["/glossary", "Словарь"], ["/notes", "Конспекты"], ["/videos", "Видеотека"], ["/account", "Личный кабинет"]
-          ].map(([href, label]) => (
-            <Link key={href} href={href} className="rounded-lg border border-c px-3 py-3 text-sm text-center hover:border-accent-blue/40">
-              {label}
+        <div className="mb-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-c">Навигация</p>
+          <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em]">Быстрый доступ</h2>
+        </div>
+        <div className="grid border-y border-c sm:grid-cols-2 lg:grid-cols-3">
+          {QUICK_LINKS.map(([href, label], index) => (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center justify-between gap-4 border-b border-c py-5 text-sm font-medium hover:text-accent-blue sm:px-5 ${index % 2 === 1 ? "sm:border-l" : ""}`}
+            >
+              <span>{label}</span>
+              <ArrowRight size={15} className="shrink-0 text-muted-c" />
             </Link>
           ))}
         </div>
       </section>
-
-      {!user && (
-        <Card className="flex items-start gap-3 border-accent-blue/20 bg-accent-blue/5">
-          <BookOpen size={18} className="mt-0.5 shrink-0 text-accent-blue" />
-          <p className="text-sm leading-6 text-muted-c">
-            В гостевом режиме прогресс хранится только в этом браузере. Синхронизацию между устройствами подключим после выбора подходящего сервиса, стабильно доступного в России.
-          </p>
-        </Card>
-      )}
     </div>
   );
 }
