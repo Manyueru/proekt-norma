@@ -1,10 +1,14 @@
 import type { Topic, TopicProgressRecord, Track } from "./types";
 
+function availableTopics(topics: Topic[]) {
+  return topics.filter((topic) => topic.contentStatus !== "outline");
+}
+
 export function getCurrentTopic(
   topics: Topic[],
   progress: Record<string, TopicProgressRecord>
 ): Topic | undefined {
-  return [...topics]
+  return [...availableTopics(topics)]
     .filter((topic) => {
       const status = progress[topic.slug]?.status;
       return status && status !== "not-started" && status !== "mastered";
@@ -17,16 +21,19 @@ export function getCurrentTopic(
 }
 
 export function getRecommendedTopic(topics: Topic[]) {
-  return topics.find((topic) => topic.slug === "razvitie-2-mesyaca") ?? topics[0];
+  return availableTopics(topics)[0];
 }
 
 export function getOverallProgress(
   topics: Topic[],
   progress: Record<string, TopicProgressRecord>
 ) {
-  if (!topics.length) return 0;
-  const mastered = topics.filter((topic) => progress[topic.slug]?.status === "mastered").length;
-  return Math.round((mastered / topics.length) * 100);
+  const activeTopics = availableTopics(topics);
+  if (!activeTopics.length) return 0;
+  const mastered = activeTopics.filter(
+    (topic) => progress[topic.slug]?.status === "mastered"
+  ).length;
+  return Math.round((mastered / activeTopics.length) * 100);
 }
 
 export function getTrackProgress(
@@ -34,8 +41,10 @@ export function getTrackProgress(
   progress: Record<string, TopicProgressRecord>,
   track: Track
 ) {
-  const trackTopics = topics.filter((topic) => topic.track === track);
-  const mastered = trackTopics.filter((topic) => progress[topic.slug]?.status === "mastered").length;
+  const trackTopics = availableTopics(topics).filter((topic) => topic.track === track);
+  const mastered = trackTopics.filter(
+    (topic) => progress[topic.slug]?.status === "mastered"
+  ).length;
   return {
     total: trackTopics.length,
     mastered,

@@ -40,19 +40,58 @@ export interface MiniTestQuestion {
   explanation?: string;
 }
 
+export type ContentStatus = "outline" | "draft" | "verified";
+
+export const CONTENT_STATUS_LABELS: Record<ContentStatus, string> = {
+  outline: "Каркас",
+  draft: "Черновик",
+  verified: "Проверено по источникам"
+};
+
+export interface LearningModule {
+  id: string;
+  order: number;
+  title: string;
+  fullTitle: string;
+  description: string;
+  track: Track;
+  trajectory: string;
+  depth: string;
+  preparationPhase: string;
+}
+
 export interface Topic {
   slug: string;
   track: Track;
+  moduleId: string;
+  moduleTitle: string;
+  moduleOrder: number;
+  topicOrder: number;
+  contentStatus: ContentStatus;
+  trajectory: string;
+  depth: string;
+  preparationPhase: string;
+  estimatedMinutes?: number | null;
   title: string;
   summary: string;
   updatedAt: string;
+  verifiedAt?: string | null;
+  verificationNote: string;
+  plannedSections: string[];
   goals: string[];
   keyConcepts: string[];
+  simpleExplanation?: string;
   theory: string;
   practicalSigns: string;
   norm: string;
   redFlags: string;
   limitations: string;
+  assessment?: string;
+  intervention?: string;
+  caseExample?: string;
+  summaryPoints?: string[];
+  commonMistakes?: string[];
+  selfCheckQuestions?: string[];
   differentialQuestions: string[];
   videoIds: string[];
   sourceIds: string[];

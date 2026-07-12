@@ -101,5 +101,102 @@
     "studyStatus": "not-started",
     "minAge": 0,
     "maxAge": 5
+  },
+  {
+    "id": "source-profstandart-defektolog",
+    "title": "Профессиональный стандарт «Педагог-дефектолог»",
+    "author": "Министерство труда и социальной защиты Российской Федерации",
+    "organization": "Минтруд России",
+    "year": 2023,
+    "type": "нормативный документ",
+    "language": "русский",
+    "url": "https://publication.pravo.gov.ru/Document/View/0001202304140006",
+    "summary": "Официальный профессиональный стандарт, описывающий трудовые функции, необходимые знания и умения педагога-дефектолога.",
+    "topicSlugs": [
+      "01-rol-logopeda-i-granitsy-kompetentsii",
+      "13-predmet-zadachi-i-metody-logopedii",
+      "13-sbor-anamneza",
+      "13-logopedicheskoe-zaklyuchenie"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "done"
+  },
+  {
+    "id": "source-asha-scope",
+    "title": "Scope of Practice in Speech-Language Pathology",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA",
+    "year": 2016,
+    "type": "официальная профессиональная политика",
+    "language": "английский",
+    "url": "https://www.asha.org/policy/sp2016-00343/",
+    "summary": "Официальная рамка ASHA по направлениям профессиональной деятельности специалиста по речи и языку; используется для международного сопоставления, а не вместо российских требований.",
+    "topicSlugs": [
+      "01-rol-logopeda-i-granitsy-kompetentsii",
+      "13-predmet-zadachi-i-metody-logopedii",
+      "13-logopedicheskoe-zaklyuchenie"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "done"
+  },
+  {
+    "id": "source-asha-assessment",
+    "title": "Assessment Tools, Techniques, and Data Sources",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA",
+    "year": 2026,
+    "type": "официальный профессиональный ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/resources/assessment-tools-techniques-and-data-sources/",
+    "summary": "Официальный обзор источников данных и методов, используемых при оценке речи и языка.",
+    "topicSlugs": [
+      "13-predmet-zadachi-i-metody-logopedii",
+      "13-sbor-anamneza",
+      "13-logopedicheskoe-zaklyuchenie"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "done"
+  },
+  {
+    "id": "source-asha-spoken-language",
+    "title": "Spoken Language Disorders",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA",
+    "year": 2026,
+    "type": "Practice Portal",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/spoken-language-disorders/",
+    "summary": "Официальный профессиональный ресурс по оценке и сопровождению нарушений устной речи; включает рекомендации по сбору анамнеза и комплексной оценке.",
+    "topicSlugs": [
+      "13-sbor-anamneza"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "done"
+  },
+  {
+    "id": "source-fz-273-79",
+    "title": "Федеральный закон № 273-ФЗ, статья 79",
+    "author": "Российская Федерация",
+    "organization": "",
+    "year": 2012,
+    "type": "нормативный документ",
+    "language": "русский",
+    "url": "https://www.consultant.ru/document/cons_doc_LAW_140174/6c54646c803424bc1fff4634c4e925d90c4affec/",
+    "summary": "Правовая основа организации образования обучающихся с ОВЗ и создания специальных условий.",
+    "topicSlugs": [
+      "01-rol-logopeda-i-granitsy-kompetentsii"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "done"
   }
 ]

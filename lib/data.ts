@@ -1,4 +1,5 @@
 import topicsData from "@/data/topics.json";
+import modulesData from "@/data/modules.json";
 import sourcesData from "@/data/sources.json";
 import observationsData from "@/data/observations.json";
 import casesData from "@/data/cases.json";
@@ -6,6 +7,7 @@ import glossaryData from "@/data/glossary.json";
 import videosData from "@/data/videos.json";
 import {
   ClinicalCase,
+  LearningModule,
   GlossaryTerm,
   ObservationCard,
   Source,
@@ -14,11 +16,16 @@ import {
 } from "./types";
 
 export const topics = topicsData as Topic[];
+export const modules = modulesData as LearningModule[];
 export const sources = sourcesData as Source[];
 export const observations = observationsData as ObservationCard[];
 export const cases = casesData as ClinicalCase[];
 export const glossary = glossaryData as GlossaryTerm[];
 export const videos = videosData as Video[];
+
+export function getModule(id: string): LearningModule | undefined {
+  return modules.find((module) => module.id === id);
+}
 
 export function getTopic(slug: string): Topic | undefined {
   return topics.find((t) => t.slug === slug);

@@ -35,7 +35,8 @@ export function HomeDashboard() {
   const hasStarted = Object.values(progress).some((record) => record.status !== "not-started");
   const current = getCurrentTopic(topics, progress);
   const toReview = topics.filter((topic) => progress[topic.slug]?.status === "review");
-  const mastered = topics.filter((topic) => progress[topic.slug]?.status === "mastered").length;
+  const availableTopics = topics.filter((topic) => topic.contentStatus !== "outline");
+  const mastered = availableTopics.filter((topic) => progress[topic.slug]?.status === "mastered").length;
   const overall = getOverallProgress(topics, progress);
   const recentTopics = [...topics]
     .filter((topic) => progress[topic.slug]?.lastOpenedAt)
@@ -166,7 +167,7 @@ export function HomeDashboard() {
             <p className="text-xs text-muted-c">Общий прогресс</p>
             <p className="mt-3 text-3xl font-semibold tracking-[-0.04em]">{overall}%</p>
             <div className="mt-4"><ProgressBar value={overall} /></div>
-            <p className="mt-3 text-xs text-muted-c">Освоено {mastered} из {topics.length} тем</p>
+            <p className="mt-3 text-xs text-muted-c">Освоено {mastered} из {availableTopics.length} доступных тем</p>
           </div>
         </div>
       </section>
