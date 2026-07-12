@@ -62,7 +62,7 @@ export function MobileNav() {
               <div>
                 <p className="text-base font-semibold tracking-[-0.02em]">Разделы</p>
                 <p className="mt-1 text-xs text-muted-c">
-                  {user ? profile?.displayName || user.email : configured ? "Гостевой режим" : "Локальный кабинет"}
+                  {user ? profile?.displayName || user.email : configured ? "Гостевой режим" : "Кабинет"}
                 </p>
               </div>
               <button
