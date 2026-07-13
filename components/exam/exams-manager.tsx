@@ -10,7 +10,7 @@ import {
 } from "@/lib/types";
 import { daysUntil, formatDate, getExamProgress } from "@/lib/study-planner";
 import { usePersonalData } from "@/components/providers/personal-data-provider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FormField } from "@/components/ui/form-field";
 import { Input, Select, Textarea } from "@/components/ui/input";
@@ -194,7 +194,7 @@ export function ExamsManager() {
               </div>
 
               <div className="mt-auto flex flex-wrap gap-2">
-                <Link href={`/exams/${exam.id}`}><Button variant="primary"><CalendarDays size={15} />Открыть подготовку</Button></Link>
+                <Link href={`/exams/${exam.id}`} className={buttonClassName({ variant: "primary" })}><CalendarDays size={15} />Открыть подготовку</Link>
                 <Button onClick={() => setDraft(toEditor(exam))}><Edit3 size={15} />Изменить</Button>
                 <Button variant="ghost" onClick={() => void handleDelete(exam)}><Trash2 size={15} />Удалить</Button>
               </div>

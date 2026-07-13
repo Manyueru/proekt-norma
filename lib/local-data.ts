@@ -1,9 +1,11 @@
 "use client";
 
 import type {
+  BookProgress,
   ClinicalCaseAnswer,
   Exam,
   Note,
+  ObservationAttempt,
   StudyTask,
   TestAttempt,
   TopicProgressRecord,
@@ -16,7 +18,9 @@ const KEYS = {
   cases: "norma:v2:case-answers",
   tests: "norma:v2:test-attempts",
   studyTasks: "norma:v3:study-tasks",
-  exams: "norma:v3:exams"
+  exams: "norma:v3:exams",
+  observations: "norma:v4:observation-attempts",
+  books: "norma:v4:book-progress"
 };
 
 const LEGACY_PROGRESS_KEY = "norma:progress";
@@ -137,6 +141,33 @@ export function setLocalTestAttempts(attempts: TestAttempt[]) {
 }
 
 
+
+export function getLocalBookProgress(): Record<string, BookProgress> {
+  return read<Record<string, BookProgress>>(KEYS.books, {});
+}
+
+export function setLocalBookProgress(progress: BookProgress) {
+  const all = getLocalBookProgress();
+  all[progress.bookId] = progress;
+  write(KEYS.books, all);
+}
+
+export function getLocalObservationAttempts(): Record<string, ObservationAttempt> {
+  return read<Record<string, ObservationAttempt>>(KEYS.observations, {});
+}
+
+export function setLocalObservationAttempt(attempt: ObservationAttempt) {
+  const all = getLocalObservationAttempts();
+  all[attempt.observationSlug] = attempt;
+  write(KEYS.observations, all);
+}
+
+export function deleteLocalObservationAttempt(observationSlug: string) {
+  const all = getLocalObservationAttempts();
+  delete all[observationSlug];
+  write(KEYS.observations, all);
+}
+
 export function getLocalStudyTasks(): StudyTask[] {
   return read<StudyTask[]>(KEYS.studyTasks, []);
 }
@@ -173,28 +204,58 @@ export interface LocalBackupV3 {
   exams: Exam[];
 }
 
-export function createLocalBackup(): LocalBackupV3 {
+export interface LocalBackupV4 {
+  version: 4;
+  exportedAt: string;
+  progress: Record<string, TopicProgressRecord>;
+  notes: Note[];
+  caseAnswers: Record<string, ClinicalCaseAnswer>;
+  testAttempts: TestAttempt[];
+  studyTasks: StudyTask[];
+  exams: Exam[];
+  observationAttempts: Record<string, ObservationAttempt>;
+  bookProgress: Record<string, BookProgress>;
+}
+
+export function createLocalBackup(): LocalBackupV4 {
   return {
-    version: 3,
+    version: 4,
     exportedAt: now(),
     progress: getLocalProgress(),
     notes: getLocalNotes(),
     caseAnswers: getLocalCaseAnswers(),
     testAttempts: getLocalTestAttempts(),
     studyTasks: getLocalStudyTasks(),
-    exams: getLocalExams()
+    exams: getLocalExams(),
+    observationAttempts: getLocalObservationAttempts(),
+    bookProgress: getLocalBookProgress()
   };
 }
 
-export function restoreLocalBackup(backup: LocalBackupV2 | LocalBackupV3) {
+export function restoreLocalBackup(backup: LocalBackupV2 | LocalBackupV3 | LocalBackupV4) {
   write(KEYS.progress, backup.progress);
   write(KEYS.notes, backup.notes);
   write(KEYS.cases, backup.caseAnswers);
   write(KEYS.tests, backup.testAttempts);
-  if (backup.version === 3) {
-    write(KEYS.studyTasks, backup.studyTasks);
-    write(KEYS.exams, backup.exams);
+  if (backup.version === 2) {
+    write(KEYS.studyTasks, []);
+    write(KEYS.exams, []);
+    write(KEYS.observations, {});
+    write(KEYS.books, {});
+    return;
   }
+
+  write(KEYS.studyTasks, backup.studyTasks);
+  write(KEYS.exams, backup.exams);
+
+  if (backup.version === 3) {
+    write(KEYS.observations, {});
+    write(KEYS.books, {});
+    return;
+  }
+
+  write(KEYS.observations, backup.observationAttempts);
+  write(KEYS.books, backup.bookProgress ?? {});
 }
 
 export function resetLocalData() {

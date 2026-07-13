@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { modules, topics } from "@/lib/data";
 import { ModulesCatalog } from "@/components/topic/modules-catalog";
 
@@ -17,7 +18,9 @@ export default function ModulesPage() {
           будущую структуру без неподтверждённого учебного текста.
         </p>
       </div>
-      <ModulesCatalog topics={topics} modules={modules} />
+      <Suspense fallback={<p className="text-sm text-muted-c">Загрузка модулей…</p>}>
+        <ModulesCatalog topics={topics} modules={modules} />
+      </Suspense>
     </div>
   );
 }

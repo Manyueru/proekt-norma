@@ -8,7 +8,7 @@ import { TRACK_LABELS, type Track } from "@/lib/types";
 import { getCurrentTopic, getOverallProgress, getTrackProgress } from "@/lib/progress";
 import { useAuth } from "@/components/providers/auth-provider";
 import { usePersonalData } from "@/components/providers/personal-data-provider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/ui/form-field";
@@ -16,7 +16,7 @@ import { ProgressBar } from "@/components/shared/progress-bar";
 
 export function AccountDashboard() {
   const { user, profile, signOut, updateProfile, configured } = useAuth();
-  const { progress, notes, caseAnswers, testAttempts, studyTasks, exams, storageMode } = usePersonalData();
+  const { progress, notes, caseAnswers, observationAttempts, bookProgress, testAttempts, studyTasks, exams, storageMode } = usePersonalData();
   const [name, setName] = useState(profile?.displayName || "");
   const [message, setMessage] = useState<string | null>(null);
 
@@ -27,6 +27,8 @@ export function AccountDashboard() {
   const overall = getOverallProgress(topics, progress);
   const tracks = Object.keys(TRACK_LABELS) as Track[];
   const solvedCases = Object.values(caseAnswers).filter((answer) => answer.status === "solved").length;
+  const completedObservations = Object.values(observationAttempts).filter((attempt) => attempt.status === "completed").length;
+  const completedBooks = Object.values(bookProgress).filter((item) => item.status === "completed").length;
   const bestTests = useMemo(() => {
     const byQuiz = new Map<string, number>();
     testAttempts.forEach((attempt) => {
@@ -53,14 +55,9 @@ export function AccountDashboard() {
               </p>
             </div>
           </div>
-          {!configured && (
-            <p className="rounded-lg bg-accent-violet/10 p-3 text-sm text-muted-c">
-              Подключение аккаунтов ещё не настроено. До этого момента сайт продолжит работать локально в текущем браузере.
-            </p>
-          )}
           <div className="flex flex-wrap gap-2">
-            <Link href="/auth/login"><Button variant="primary"><LogIn size={16} />Войти</Button></Link>
-            <Link href="/auth/register"><Button>Создать аккаунт</Button></Link>
+            <Link href="/auth/login" className={buttonClassName({ variant: "primary" })}><LogIn size={16} />Войти</Link>
+            <Link href="/auth/register" className={buttonClassName()}>Создать аккаунт</Link>
           </div>
         </Card>
       </div>
@@ -102,10 +99,12 @@ export function AccountDashboard() {
         </Card>
       )}
 
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card className="p-4"><p className="text-xs text-muted-c">Общий прогресс</p><p className="mt-1 text-2xl font-medium">{overall}%</p><div className="mt-2"><ProgressBar value={overall} /></div></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Конспекты</p><p className="mt-1 text-2xl font-medium">{notes.length}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted-c">Решённые задачи</p><p className="mt-1 text-2xl font-medium">{solvedCases}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-c">Клинические задачи</p><p className="mt-1 text-2xl font-medium">{solvedCases}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-c">Случаи насмотренности</p><p className="mt-1 text-2xl font-medium">{completedObservations}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-c">Изученные книги</p><p className="mt-1 text-2xl font-medium">{completedBooks}</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Пройденные тесты</p><p className="mt-1 text-2xl font-medium">{bestTests.length}</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Активные дедлайны</p><p className="mt-1 text-2xl font-medium">{studyTasks.filter((task) => task.status !== "completed").length}</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-c">Экзамены</p><p className="mt-1 text-2xl font-medium">{exams.length}</p></Card>
@@ -114,7 +113,7 @@ export function AccountDashboard() {
       {current && (
         <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div><p className="text-xs text-muted-c">Продолжить</p><p className="mt-1 text-sm font-medium">{current.title}</p></div>
-          <Link href={`/modules/${current.slug}`}><Button variant="primary">Открыть тему</Button></Link>
+          <Link href={`/modules/${current.slug}`} className={buttonClassName({ variant: "primary" })}>Открыть тему</Link>
         </Card>
       )}
 

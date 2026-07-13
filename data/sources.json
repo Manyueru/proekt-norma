@@ -10,15 +10,17 @@
     "url": "",
     "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Классическое описание этапов формирования речи от гуления до фразовой речи.",
     "topicSlugs": [
-      "sovmestnoe-vnimanie",
-      "pervye-rechevye-reakcii"
+      "10-dorechevoy-period-krik-gulenie-i-lepet",
+      "10-sovmestnoe-vnimanie-i-kommunikativnye-namereniya",
+      "10-zhesty-i-rannyaya-kommunikatsiya"
     ],
     "reliability": "C",
     "checkedAt": "2026-06-20",
-    "isCurrent": true,
+    "isCurrent": false,
     "studyStatus": "done",
     "minAge": 0,
-    "maxAge": 3
+    "maxAge": 3,
+    "accessNote": "Библиографические данные требуют проверки до использования как основного источника."
   },
   {
     "id": "source-who-milestones",
@@ -31,8 +33,8 @@
     "url": "https://www.who.int/tools/child-growth-standards/standards/motor-development-milestones",
     "summary": "Официальный материал ВОЗ по основным этапам моторного развития детей раннего возраста.",
     "topicSlugs": [
-      "razvitie-2-mesyaca",
-      "sovmestnoe-vnimanie"
+      "09-ranniy-vozrast",
+      "20-motorika-i-praksis"
     ],
     "reliability": "A",
     "checkedAt": "2026-06-28",
@@ -43,23 +45,26 @@
   },
   {
     "id": "source-logopediya-uchebnik",
-    "title": "Логопедия: учебник для вузов",
-    "author": "под ред. Л. С. Волковой",
+    "title": "Логопедия: учебник для студентов дефектологических факультетов",
+    "author": "под ред. Л. С. Волковой, С. Н. Шаховской",
     "organization": "",
-    "year": 2019,
+    "year": 2004,
     "type": "учебник",
     "language": "русский",
     "url": "",
-    "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Базовый вузовский учебник по логопедии с описанием речевых нарушений и методов коррекции.",
+    "summary": "Базовый отечественный учебник по теоретическим основам логопедии, классификациям, отдельным нарушениям и коррекционной работе. Используется как классический учебный источник; определения, классификации и методы обязательно сопоставляются с современными данными.",
     "topicSlugs": [
-      "pervye-rechevye-reakcii"
+      "13-predmet-zadachi-i-metody-logopedii",
+      "13-sbor-anamneza",
+      "19-printsipy-korrektsionnogo-obucheniya"
     ],
-    "reliability": "B",
+    "reliability": "C",
     "checkedAt": "2026-06-15",
-    "isCurrent": true,
+    "isCurrent": false,
     "studyStatus": "in-progress",
     "minAge": 0,
-    "maxAge": 7
+    "maxAge": 7,
+    "accessNote": "Файл находится в библиотеке проекта."
   },
   {
     "id": "source-vozrastnaya-fiziologiya",
@@ -72,28 +77,31 @@
     "url": "",
     "summary": "Демонстрационная запись — библиографические данные и ссылка требуют проверки. Физиологические основы развития нервной системы ребёнка по возрастным периодам.",
     "topicSlugs": [
-      "razvitie-2-mesyaca"
+      "09-ranniy-vozrast",
+      "20-motorika-i-praksis"
     ],
     "reliability": "C",
     "checkedAt": "2026-05-30",
-    "isCurrent": true,
+    "isCurrent": false,
     "studyStatus": "not-started",
     "minAge": 0,
-    "maxAge": 1
+    "maxAge": 1,
+    "accessNote": "Библиографические данные требуют проверки."
   },
   {
     "id": "source-asha-communication",
-    "title": "Typical Speech and Language Development",
+    "title": "Communication Milestones: Age Ranges",
     "author": "American Speech-Language-Hearing Association",
     "organization": "ASHA",
     "year": 2024,
     "type": "сайт",
     "language": "английский",
     "url": "https://www.asha.org/public/developmental-milestones/communication-milestones/",
-    "summary": "Официальные ориентиры ASHA по развитию коммуникации и речи. Используются как ориентиры, а не как самостоятельный диагноз.",
+    "summary": "Официальные возрастные ориентиры ASHA по развитию коммуникации и речи. Страница прямо предупреждает, что эти ориентиры не являются скринингом или диагностическим инструментом.",
     "topicSlugs": [
-      "sovmestnoe-vnimanie",
-      "pervye-rechevye-reakcii"
+      "10-sovmestnoe-vnimanie-i-kommunikativnye-namereniya",
+      "10-zhesty-i-rannyaya-kommunikatsiya",
+      "10-rannie-trevozhnye-priznaki"
     ],
     "reliability": "A",
     "checkedAt": "2026-07-02",
@@ -148,7 +156,6 @@
     "title": "Assessment Tools, Techniques, and Data Sources",
     "author": "American Speech-Language-Hearing Association",
     "organization": "ASHA",
-    "year": 2026,
     "type": "официальный профессиональный ресурс",
     "language": "английский",
     "url": "https://www.asha.org/practice-portal/resources/assessment-tools-techniques-and-data-sources/",
@@ -168,7 +175,6 @@
     "title": "Spoken Language Disorders",
     "author": "American Speech-Language-Hearing Association",
     "organization": "ASHA",
-    "year": 2026,
     "type": "Practice Portal",
     "language": "английский",
     "url": "https://www.asha.org/practice-portal/clinical-topics/spoken-language-disorders/",
@@ -198,5 +204,134 @@
     "checkedAt": "2026-07-13",
     "isCurrent": true,
     "studyStatus": "done"
+  },
+  {
+    "id": "source-asha-late-language",
+    "title": "Late Language Emergence",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA Practice Portal",
+    "type": "профессиональный клинический ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/late-language-emergence/",
+    "summary": "Официальный профессиональный обзор позднего появления речи: признаки, оценка, дифференциальные вопросы и направления вмешательства.",
+    "topicSlugs": [
+      "10-frazovaya-rech-i-grammaticheskiy-stroy",
+      "13-obsledovanie-aktivnoy-rechi",
+      "16-obsledovanie-negovoryaschego-rebenka"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 1,
+    "maxAge": 5
+  },
+  {
+    "id": "source-asha-ssd",
+    "title": "Speech Sound Disorders: Articulation and Phonology",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA Practice Portal",
+    "type": "профессиональный клинический ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/articulation-and-phonology/",
+    "summary": "Официальный обзор нарушений звукопроизношения и фонологических трудностей, принципов обследования и вмешательства.",
+    "topicSlugs": [
+      "10-zvukoproiznoshenie-i-slogovaya-struktura",
+      "13-zvukoproiznoshenie-i-fonematicheskie-protsessy",
+      "14-foneticheskie-i-fonologicheskie-trudnosti"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 2,
+    "maxAge": 18
+  },
+  {
+    "id": "source-asha-fluency",
+    "title": "Stuttering, Cluttering, and Fluency",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA Practice Portal",
+    "type": "профессиональный клинический ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/fluency-disorders/",
+    "summary": "Официальный обзор нарушений плавности речи, комплексной оценки, факторов участия и подходов к помощи.",
+    "topicSlugs": [
+      "15-normalnaya-neplavnost-rechi",
+      "15-zaikanie-proyavleniya-i-mehanizmy",
+      "15-kompleksnoe-obsledovanie"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 2,
+    "maxAge": 18
+  },
+  {
+    "id": "source-asha-written-language",
+    "title": "Written Language Disorders",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA Practice Portal",
+    "type": "профессиональный клинический ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/written-language-disorders/",
+    "summary": "Официальный обзор трудностей чтения и письма, комплексного обследования и направлений вмешательства.",
+    "topicSlugs": [
+      "13-chtenie-i-pismo",
+      "17-disleksiya",
+      "17-disgrafiya",
+      "17-obsledovanie-chteniya",
+      "17-obsledovanie-pisma"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 5,
+    "maxAge": 18
+  },
+  {
+    "id": "source-asha-hearing-children",
+    "title": "Hearing Loss in Children",
+    "author": "American Speech-Language-Hearing Association",
+    "organization": "ASHA Practice Portal",
+    "type": "профессиональный клинический ресурс",
+    "language": "английский",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/hearing-loss-in-children/",
+    "summary": "Официальный ресурс о признаках снижения слуха у детей, оценке и влиянии слуха на коммуникацию и развитие языка.",
+    "topicSlugs": [
+      "06-sluhovaya-sistema-i-sluhorechevaya-pererabotka",
+      "12-narusheniya-sluha",
+      "16-differentsiatsiya-s-narusheniem-sluha",
+      "18-rech-pri-narushenii-sluha"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 0,
+    "maxAge": 18
+  },
+  {
+    "id": "source-nidcd-development-milestones",
+    "title": "Speech and Language Developmental Milestones",
+    "author": "National Institute on Deafness and Other Communication Disorders",
+    "organization": "NIDCD, NIH",
+    "year": 2022,
+    "type": "официальный информационный ресурс",
+    "language": "английский",
+    "url": "https://www.nidcd.nih.gov/health/speech-and-language",
+    "summary": "Официальный ориентир по последовательности раннего развития речи и языка с указанием вариативности и необходимости дополнительной оценки при выраженных трудностях.",
+    "topicSlugs": [
+      "10-frazovaya-rech-i-grammaticheskiy-stroy",
+      "10-zvukoproiznoshenie-i-slogovaya-struktura"
+    ],
+    "reliability": "A",
+    "checkedAt": "2026-07-13",
+    "isCurrent": true,
+    "studyStatus": "not-started",
+    "minAge": 0,
+    "maxAge": 5
   }
 ]

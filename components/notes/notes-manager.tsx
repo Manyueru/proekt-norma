@@ -9,6 +9,7 @@ import { usePersonalData } from "@/components/providers/personal-data-provider";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/input";
+import { TopicPicker } from "@/components/shared/topic-picker";
 import { FormField } from "@/components/ui/form-field";
 
 function createEmptyNote(mode: NoteMode = "quick"): Note {
@@ -37,7 +38,6 @@ export function NotesManager() {
   const searchParams = useSearchParams();
   const { notes, saveNote, deleteNote } = usePersonalData();
   const [query, setQuery] = useState("");
-  const [topicFilter, setTopicFilter] = useState("all");
   const [active, setActive] = useState<Note | null>(null);
   const [draft, setDraft] = useState<Note | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -76,11 +76,12 @@ export function NotesManager() {
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return notes.filter((note) => {
-      if (topicFilter !== "all" && note.topicSlug !== topicFilter) return false;
-      if (normalized && !`${note.title} ${note.body} ${note.mainIdea} ${note.keyFacts}`.toLowerCase().includes(normalized)) return false;
+      const linkedTopic = topics.find((topic) => topic.slug === note.topicSlug);
+      const haystack = `${note.title} ${note.body} ${note.mainIdea} ${note.keyFacts} ${linkedTopic?.title ?? ""} ${linkedTopic?.moduleTitle ?? ""}`.toLowerCase();
+      if (normalized && !haystack.includes(normalized)) return false;
       return true;
     });
-  }, [notes, query, topicFilter]);
+  }, [notes, query]);
 
   function startNew(mode: NoteMode) {
     setActive(null);
@@ -144,10 +145,12 @@ export function NotesManager() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField label="Связанная тема" hint="Можно оставить без привязки.">
-              <Select className="w-full" value={draft.topicSlug ?? ""} onChange={(event) => patch({ topicSlug: event.target.value || undefined })}>
-                <option value="">Без привязки</option>
-                {topics.map((topic) => <option key={topic.slug} value={topic.slug}>{topic.title}</option>)}
-              </Select>
+              <TopicPicker
+                selectedSlugs={draft.topicSlug ? [draft.topicSlug] : []}
+                onChange={(slugs) => patch({ topicSlug: slugs.at(-1) })}
+                maxVisible={12}
+                emptyHint="Найдите тему по названию или выберите её модуль."
+              />
             </FormField>
             <FormField label="Источник" hint="Книга, статья, лекция или видео.">
               <Select className="w-full" value={draft.sourceId ?? ""} onChange={(event) => patch({ sourceId: event.target.value || undefined })}>
@@ -214,15 +217,24 @@ export function NotesManager() {
         <div className="flex flex-wrap gap-2"><Button variant="primary" onClick={() => startNew("quick")}><Plus size={16} />Быстрый конспект</Button><Button onClick={() => startNew("study")}><Plus size={16} />Учебный конспект</Button></div>
       </Card>
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-c" /><Input className="pl-9" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск по конспектам" /></div>
-        <Select value={topicFilter} onChange={(event) => setTopicFilter(event.target.value)}><option value="all">Все темы</option>{topics.map((topic)=><option key={topic.slug} value={topic.slug}>{topic.title}</option>)}</Select>
+      <div className="relative">
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-c" />
+        <Input className="pl-9" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Поиск по конспектам, теме или модулю" />
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         {filtered.map((note) => {
           const topic = topics.find((item) => item.slug === note.topicSlug);
-          return <Card key={note.id} className="flex cursor-pointer flex-col gap-2 hover:border-accent-blue/40" onClick={() => setActive(note)}><div className="flex items-start justify-between gap-3"><h3 className="text-sm font-medium">{note.title}</h3><span className="text-[10px] uppercase tracking-wide text-muted-c">{note.mode === "quick" ? "Быстрый" : "Учебный"}</span></div>{topic&&<p className="text-xs text-accent-blue">{topic.title}</p>}<p className="line-clamp-3 whitespace-pre-wrap text-sm leading-6 text-muted-c">{notePreview(note)}</p><p className="mt-auto text-xs text-muted-c">Обновлён {new Date(note.updatedAt).toLocaleDateString("ru-RU")}</p></Card>;
+          return (
+            <button key={note.id} type="button" className="h-full text-left" onClick={() => setActive(note)}>
+              <Card className="flex h-full flex-col gap-2 transition-colors hover:border-accent-blue/40">
+                <div className="flex items-start justify-between gap-3"><h3 className="text-sm font-medium">{note.title}</h3><span className="text-[10px] uppercase tracking-wide text-muted-c">{note.mode === "quick" ? "Быстрый" : "Учебный"}</span></div>
+                {topic&&<p className="text-xs text-accent-blue">{topic.title}</p>}
+                <p className="line-clamp-3 whitespace-pre-wrap text-sm leading-6 text-muted-c">{notePreview(note)}</p>
+                <p className="mt-auto text-xs text-muted-c">Обновлён {new Date(note.updatedAt).toLocaleDateString("ru-RU")}</p>
+              </Card>
+            </button>
+          );
         })}
       </div>
       {!filtered.length && <p className="text-sm text-muted-c">Конспектов по выбранным условиям пока нет.</p>}

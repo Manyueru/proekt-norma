@@ -5,12 +5,16 @@ import observationsData from "@/data/observations.json";
 import casesData from "@/data/cases.json";
 import glossaryData from "@/data/glossary.json";
 import videosData from "@/data/videos.json";
+import booksData from "@/data/books.json";
+import methodsData from "@/data/methods.json";
 import {
   ClinicalCase,
+  InterventionMethod,
   LearningModule,
   GlossaryTerm,
   ObservationCard,
   Source,
+  StudyBook,
   Topic,
   Video
 } from "./types";
@@ -22,6 +26,8 @@ export const observations = observationsData as ObservationCard[];
 export const cases = casesData as ClinicalCase[];
 export const glossary = glossaryData as GlossaryTerm[];
 export const videos = videosData as Video[];
+export const books = booksData as StudyBook[];
+export const methods = methodsData as InterventionMethod[];
 
 export function getModule(id: string): LearningModule | undefined {
   return modules.find((module) => module.id === id);
@@ -53,4 +59,12 @@ export function getTopicsBySlugs(slugs: string[]): Topic[] {
 
 export function getGlossaryTerm(slug: string): GlossaryTerm | undefined {
   return glossary.find((g) => g.slug === slug);
+}
+
+export function getBook(id: string): StudyBook | undefined {
+  return books.find((book) => book.id === id);
+}
+
+export function getMethod(id: string): InterventionMethod | undefined {
+  return methods.find((method) => method.id === id);
 }

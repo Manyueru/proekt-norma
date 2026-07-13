@@ -102,7 +102,7 @@ export interface Topic {
 export type ReliabilityLevel = "A" | "B" | "C" | "D";
 
 export const RELIABILITY_LABELS: Record<ReliabilityLevel, string> = {
-  A: "Официальные рекомендации, систематические обзоры",
+  A: "Официальные документы и профессиональные руководства",
   B: "Современные учебники, рецензируемые статьи",
   C: "Классические и исторические материалы",
   D: "Блоги и материалы без доказательной базы"
@@ -113,7 +113,7 @@ export interface Source {
   title: string;
   author: string;
   organization?: string;
-  year: number;
+  year?: number;
   type: string;
   language: string;
   url?: string;
@@ -125,7 +125,27 @@ export interface Source {
   studyStatus: "not-started" | "in-progress" | "done";
   minAge?: number;
   maxAge?: number;
+  accessNote?: string;
 }
+
+export type ObservationCategory =
+  | "ontogenesis"
+  | "speech"
+  | "communication"
+  | "motor"
+  | "hearing"
+  | "learning"
+  | "combined";
+
+export const OBSERVATION_CATEGORY_LABELS: Record<ObservationCategory, string> = {
+  ontogenesis: "Онтогенез и возрастное развитие",
+  speech: "Речь и язык",
+  communication: "Коммуникация и взаимодействие",
+  motor: "Моторика и праксис",
+  hearing: "Слух и слуховое восприятие",
+  learning: "Обучение, чтение и письмо",
+  combined: "Сочетанный профиль"
+};
 
 export interface ObservationCard {
   slug: string;
@@ -139,6 +159,25 @@ export interface ObservationCard {
   specialists: string[];
   topicSlugs: string[];
   sourceIds: string[];
+  category?: ObservationCategory;
+  difficulty?: "Базовый" | "Средний" | "Продвинутый";
+  focusAreas?: string[];
+}
+
+export type ObservationAttemptStatus = "draft" | "reviewed" | "completed";
+
+export interface ObservationAttempt {
+  observationSlug: string;
+  signsNoticed: string;
+  normAndConcern: string;
+  missingInformation: string;
+  nextChecks: string;
+  specialistsReasoning: string;
+  analysisRevealed: boolean;
+  status: ObservationAttemptStatus;
+  reviewDate?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ClinicalCase {
@@ -174,6 +213,82 @@ export interface GlossaryTerm {
   ruTerm: string;
   intlTerm: string;
   sourceIds: string[];
+}
+
+export type MethodEvidenceStatus =
+  | "well-supported"
+  | "moderate"
+  | "emerging"
+  | "practice-based"
+  | "historical"
+  | "insufficient";
+
+export const METHOD_EVIDENCE_LABELS: Record<MethodEvidenceStatus, string> = {
+  "well-supported": "Хорошо исследовано",
+  moderate: "Умеренная доказательная база",
+  emerging: "Предварительные данные",
+  "practice-based": "Преимущественно профессиональная традиция",
+  historical: "Исторически значимый подход",
+  insufficient: "Недостаточно данных"
+};
+
+export interface InterventionMethod {
+  id: string;
+  title: string;
+  origin: "Россия" | "Зарубежный подход";
+  authors: string;
+  area: string;
+  ageRange: string;
+  kind: string;
+  summary: string;
+  theoreticalBasis: string;
+  targetProfile: string[];
+  steps: string[];
+  evidenceStatus: MethodEvidenceStatus;
+  evidenceSummary: string;
+  limitations: string[];
+  trainingRequirements: string;
+  russianApplicability: string;
+  sourceIds: string[];
+  topicSlugs: string[];
+  contentStatus: "outline" | "reviewed";
+}
+
+export type BookContentStatus = "ready" | "outline" | "verification";
+
+export interface BookChapter {
+  id: string;
+  title: string;
+  goal: string;
+  readingGuide: string[];
+  reflectionQuestions: string[];
+}
+
+export interface StudyBook {
+  id: string;
+  title: string;
+  author: string;
+  edition?: string;
+  year?: number;
+  category: string;
+  description: string;
+  whyStudy: string;
+  cautions: string[];
+  contentStatus: BookContentStatus;
+  sourceId?: string;
+  chapters: BookChapter[];
+  quiz: MiniTestQuestion[];
+}
+
+export interface BookProgress {
+  bookId: string;
+  completedChapterIds: string[];
+  chapterNotes: Record<string, string>;
+  quizAnswers: Record<string, number>;
+  quizScore?: number;
+  quizTotal?: number;
+  status: "not-started" | "reading" | "completed";
+  updatedAt: string;
 }
 
 export interface Video {

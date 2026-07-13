@@ -15,7 +15,7 @@ export function BackupManager() {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
-    if (!window.confirm("Импорт заменит текущие конспекты, прогресс, экзамены и учебные задачи. Продолжить?")) return;
+    if (!window.confirm("Импорт заменит текущие конспекты, прогресс, экзамены, дедлайны, разборы насмотренности и прогресс по книгам. Продолжить?")) return;
     try {
       await importBackup(file);
       setMessage("Резервная копия восстановлена. Страница будет обновлена.");
@@ -26,7 +26,7 @@ export function BackupManager() {
   }
 
   function handleReset() {
-    if (!window.confirm("Удалить весь локальный прогресс, конспекты, экзамены и учебные задачи? Это действие нельзя отменить без резервной копии.")) return;
+    if (!window.confirm("Удалить весь локальный прогресс, конспекты, экзамены, дедлайны, разборы насмотренности и прогресс по книгам? Это действие нельзя отменить без резервной копии.")) return;
     resetLocalData();
     setMessage("Локальные данные удалены. Страница будет обновлена.");
     window.setTimeout(() => window.location.reload(), 500);
@@ -38,7 +38,7 @@ export function BackupManager() {
       <p className="mt-1 text-xs leading-5 text-muted-c">
         {storageMode === "cloud"
           ? "Данные аккаунта синхронизируются автоматически. Экспорт ниже предназначен для локального гостевого режима."
-          : "Данные сохраняются только в этом браузере. Очистка данных браузера может удалить прогресс, конспекты, экзамены и учебные задачи."}
+          : "Данные сохраняются только в этом браузере. Очистка данных браузера может удалить прогресс, конспекты, экзамены, дедлайны, разборы насмотренности и прогресс по книгам."}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button size="sm" onClick={downloadBackup} disabled={storageMode === "cloud"}><Download size={15} />Экспортировать</Button>

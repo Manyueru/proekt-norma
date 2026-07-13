@@ -12,7 +12,6 @@ import {
   Trash2,
   X
 } from "lucide-react";
-import { topics } from "@/lib/data";
 import {
   STUDY_TASK_PRIORITY_LABELS,
   STUDY_TASK_STATUS_LABELS,
@@ -29,6 +28,7 @@ import { Card } from "@/components/ui/card";
 import { FormField } from "@/components/ui/form-field";
 import { Input, Select, Textarea } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { TopicPicker } from "@/components/shared/topic-picker";
 
 function localDateTimeInput(date: Date) {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
@@ -205,27 +205,11 @@ export function StudyTasksManager() {
             </FormField>
           </div>
 
-          <FormField label="Связанные темы" hint="Отметьте темы, к которым относится задание. Это необязательно.">
-            <div className="grid gap-2 sm:grid-cols-2">
-              {topics.map((topic) => {
-                const checked = draft.topicSlugs.includes(topic.slug);
-                return (
-                  <label key={topic.slug} className="flex items-start gap-2 rounded-lg border border-c px-3 py-2 text-sm">
-                    <input
-                      className="mt-1"
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => patch({
-                        topicSlugs: checked
-                          ? draft.topicSlugs.filter((slug) => slug !== topic.slug)
-                          : [...draft.topicSlugs, topic.slug]
-                      })}
-                    />
-                    <span>{topic.title}</span>
-                  </label>
-                );
-              })}
-            </div>
+          <FormField label="Связанные темы" hint="Найдите тему по названию или сначала выберите модуль. Привязка необязательна.">
+            <TopicPicker
+              selectedSlugs={draft.topicSlugs}
+              onChange={(topicSlugs) => patch({ topicSlugs })}
+            />
           </FormField>
 
           <FormField label="Описание" hint="Требования, объём, важные детали или ссылка на задание.">

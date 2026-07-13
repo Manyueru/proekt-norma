@@ -9,23 +9,30 @@ import {
   type ReactNode
 } from "react";
 import {
+  deleteLocalObservationAttempt,
+  getLocalBookProgress,
   getLocalCaseAnswers,
   getLocalExams,
   getLocalNotes,
+  getLocalObservationAttempts,
   getLocalProgress,
   getLocalStudyTasks,
   getLocalTestAttempts,
+  setLocalBookProgress,
   setLocalCaseAnswer,
   setLocalExams,
   setLocalNotes,
+  setLocalObservationAttempt,
   setLocalProgress,
   setLocalStudyTasks,
   setLocalTestAttempts
 } from "@/lib/local-data";
 import type {
+  BookProgress,
   ClinicalCaseAnswer,
   Exam,
   Note,
+  ObservationAttempt,
   StudyTask,
   TestAttempt,
   TopicProgressRecord,
@@ -37,16 +44,21 @@ interface PersonalDataContextValue {
   syncError: string | null;
   storageMode: "cloud" | "local";
   progress: Record<string, TopicProgressRecord>;
+  bookProgress: Record<string, BookProgress>;
   notes: Note[];
   caseAnswers: Record<string, ClinicalCaseAnswer>;
+  observationAttempts: Record<string, ObservationAttempt>;
   testAttempts: TestAttempt[];
   studyTasks: StudyTask[];
   exams: Exam[];
   updateTopicStatus: (topicId: string, status: TopicStatus) => Promise<void>;
   markTopicOpened: (topicId: string) => Promise<void>;
+  saveBookProgress: (progress: BookProgress) => Promise<void>;
   saveNote: (note: Note) => Promise<void>;
   deleteNote: (noteId: string) => Promise<void>;
   saveCaseAnswer: (answer: ClinicalCaseAnswer) => Promise<void>;
+  saveObservationAttempt: (attempt: ObservationAttempt) => Promise<void>;
+  deleteObservationAttempt: (observationSlug: string) => Promise<void>;
   saveTestAttempt: (attempt: TestAttempt) => Promise<void>;
   saveStudyTask: (task: StudyTask) => Promise<void>;
   deleteStudyTask: (taskId: string) => Promise<void>;
@@ -70,16 +82,20 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [progress, setProgress] = useState<Record<string, TopicProgressRecord>>({});
+  const [bookProgress, setBookProgress] = useState<Record<string, BookProgress>>({});
   const [notes, setNotes] = useState<Note[]>([]);
   const [caseAnswers, setCaseAnswers] = useState<Record<string, ClinicalCaseAnswer>>({});
+  const [observationAttempts, setObservationAttempts] = useState<Record<string, ObservationAttempt>>({});
   const [testAttempts, setTestAttempts] = useState<TestAttempt[]>([]);
   const [studyTasks, setStudyTasks] = useState<StudyTask[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
 
   const loadLocal = useCallback(() => {
     setProgress(getLocalProgress());
+    setBookProgress(getLocalBookProgress());
     setNotes(getLocalNotes());
     setCaseAnswers(getLocalCaseAnswers());
+    setObservationAttempts(getLocalObservationAttempts());
     setTestAttempts(getLocalTestAttempts());
     setStudyTasks(getLocalStudyTasks());
     setExams(getLocalExams());
@@ -143,6 +159,16 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function saveBookProgress(progressRecord: BookProgress) {
+    setBookProgress((current) => ({ ...current, [progressRecord.bookId]: progressRecord }));
+    try {
+      setLocalBookProgress(progressRecord);
+      setSyncError(null);
+    } catch (error) {
+      setSyncError(storageErrorMessage(error));
+    }
+  }
+
   async function saveNote(note: Note) {
     const nextNotes = [note, ...notes.filter((item) => item.id !== note.id)];
     setNotes(nextNotes);
@@ -169,6 +195,30 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
     setCaseAnswers((current) => ({ ...current, [answer.caseId]: answer }));
     try {
       setLocalCaseAnswer(answer);
+      setSyncError(null);
+    } catch (error) {
+      setSyncError(storageErrorMessage(error));
+    }
+  }
+
+  async function saveObservationAttempt(attempt: ObservationAttempt) {
+    setObservationAttempts((current) => ({ ...current, [attempt.observationSlug]: attempt }));
+    try {
+      setLocalObservationAttempt(attempt);
+      setSyncError(null);
+    } catch (error) {
+      setSyncError(storageErrorMessage(error));
+    }
+  }
+
+  async function deleteObservationAttempt(observationSlug: string) {
+    setObservationAttempts((current) => {
+      const next = { ...current };
+      delete next[observationSlug];
+      return next;
+    });
+    try {
+      deleteLocalObservationAttempt(observationSlug);
       setSyncError(null);
     } catch (error) {
       setSyncError(storageErrorMessage(error));
@@ -248,16 +298,21 @@ export function PersonalDataProvider({ children }: { children: ReactNode }) {
         syncError,
         storageMode: "local",
         progress,
+        bookProgress,
         notes,
         caseAnswers,
+        observationAttempts,
         testAttempts,
         studyTasks,
         exams,
         updateTopicStatus,
         markTopicOpened,
+        saveBookProgress,
         saveNote,
         deleteNote,
         saveCaseAnswer,
+        saveObservationAttempt,
+        deleteObservationAttempt,
         saveTestAttempt,
         saveStudyTask,
         deleteStudyTask,

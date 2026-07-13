@@ -1,5 +1,5 @@
 import Fuse from "fuse.js";
-import { topics, sources, observations, cases, glossary, videos } from "./data";
+import { topics, sources, observations, cases, glossary, videos, books, methods } from "./data";
 
 export type SearchResultType =
   | "topic"
@@ -8,6 +8,8 @@ export type SearchResultType =
   | "case"
   | "term"
   | "video"
+  | "book"
+  | "method"
   | "note"
   | "study-task"
   | "exam";
@@ -26,6 +28,8 @@ const typeLabels: Record<SearchResultType, string> = {
   case: "Задача",
   term: "Термин",
   video: "Видео",
+  book: "Книга",
+  method: "Методика",
   note: "Конспект",
   "study-task": "Дедлайн",
   exam: "Экзамен"
@@ -70,6 +74,18 @@ function buildIndex(): SearchResult[] {
       title: v.title,
       subtitle: v.summary,
       href: `/videos#${v.id}`
+    })),
+    ...books.map((book) => ({
+      type: "book" as const,
+      title: book.title,
+      subtitle: `${book.author}. ${book.description}`,
+      href: `/books/${book.id}`
+    })),
+    ...methods.map((method) => ({
+      type: "method" as const,
+      title: method.title,
+      subtitle: `${method.authors}. ${method.summary}`,
+      href: `/methods/${method.id}`
     }))
   ];
 }

@@ -13,14 +13,16 @@ export function SourceCard({ source }: { source: Source }) {
       </div>
       <p className="text-xs text-muted-c">
         {source.author}
-        {source.organization ? `, ${source.organization}` : ""} · {source.year}
+        {source.organization ? `, ${source.organization}` : ""}
+        {source.year ? ` · ${source.year}` : ""}
       </p>
+      <p className="text-[11px] text-muted-c">Карточка проверена: {new Date(`${source.checkedAt}T12:00:00`).toLocaleDateString("ru-RU")}</p>
       <p className="text-sm text-muted-c leading-6">{source.summary}</p>
       <div className="flex gap-2 flex-wrap mt-1">
         <Badge>{source.type}</Badge>
         <Badge>{source.language}</Badge>
         {!source.isCurrent && <Badge tone="amber">Требует проверки актуальности</Badge>}
-        {!source.url && <Badge tone="amber">Ссылка требует проверки</Badge>}
+        {!source.url && !source.accessNote && <Badge tone="amber">Ссылка требует проверки</Badge>}
       </div>
       {source.url ? (
         <a
@@ -31,6 +33,8 @@ export function SourceCard({ source }: { source: Source }) {
         >
           Открыть источник <ExternalLink size={14} />
         </a>
+      ) : source.accessNote ? (
+        <p className="mt-1 text-xs leading-5 text-muted-c">{source.accessNote}</p>
       ) : (
         <p className="mt-1 text-xs text-muted-c">Ссылка пока не добавлена.</p>
       )}

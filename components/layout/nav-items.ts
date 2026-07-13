@@ -10,7 +10,11 @@ export type NavIconName =
   | "Video"
   | "SpellCheck"
   | "UserRound"
-  | "Search";
+  | "Search"
+  | "Map"
+  | "BookMarked"
+  | "ListChecks"
+  | "Microscope";
 
 export type NavItem = {
   href: string;
@@ -32,6 +36,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
     label: "Обучение",
     items: [
       { href: "/modules", label: "Модули", icon: "BookOpen" },
+      { href: "/competencies", label: "Карта знаний", icon: "Map" },
       { href: "/observations", label: "Насмотренность", icon: "Eye" },
       { href: "/cases", label: "Клинические задачи", icon: "ClipboardList" }
     ]
@@ -47,6 +52,9 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   {
     label: "Библиотека",
     items: [
+      { href: "/books", label: "Книги", icon: "BookMarked" },
+      { href: "/methods", label: "Методики", icon: "ListChecks" },
+      { href: "/research", label: "Новые исследования", icon: "Microscope" },
       { href: "/sources", label: "Источники", icon: "FileText" },
       { href: "/videos", label: "Видеотека", icon: "Video" },
       { href: "/glossary", label: "Словарь", icon: "SpellCheck" }

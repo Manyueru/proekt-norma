@@ -29,7 +29,7 @@ import {
   pickRandomQuestion
 } from "@/lib/study-planner";
 import { usePersonalData } from "@/components/providers/personal-data-provider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FormField } from "@/components/ui/form-field";
 import { Input, Select, Textarea } from "@/components/ui/input";
@@ -213,7 +213,7 @@ export function ExamWorkspace({ examId }: { examId: string }) {
           <h1 className="mt-1 text-xl font-medium">{currentExam.title}</h1>
           <p className="mt-1 text-sm text-muted-c">{currentExam.discipline}{currentExam.teacher ? ` · ${currentExam.teacher}` : ""}</p>
         </div>
-        <Link href={`/study-tasks`}><Button><Plus size={16} />Добавить учебную задачу</Button></Link>
+        <Link href="/study-tasks" className={buttonClassName()}><Plus size={16} />Добавить учебную задачу</Link>
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

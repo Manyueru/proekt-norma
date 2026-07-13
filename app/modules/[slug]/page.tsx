@@ -17,7 +17,7 @@ import { ContentStatusBadge } from "@/components/topic/content-status-badge";
 import { MiniTest } from "@/components/topic/mini-test";
 import { RelatedLinks } from "@/components/shared/related-links";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 
 export function generateStaticParams() {
   return topics.map((topic) => ({ slug: topic.slug }));
@@ -149,8 +149,8 @@ export default async function TopicPage({ params }: { params: Promise<{ slug: st
             <p className="text-sm text-muted-c">
               Тема доступна для изучения и сохранения прогресса.
             </p>
-            <Link href={`/notes?new=study&topic=${topic.slug}`} className="shrink-0">
-              <Button>Создать конспект по теме</Button>
+            <Link href={`/notes?new=study&topic=${topic.slug}`} className={buttonClassName({ className: "shrink-0" })}>
+              Создать конспект по теме
             </Link>
           </div>
 

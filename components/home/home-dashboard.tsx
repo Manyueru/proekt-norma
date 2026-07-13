@@ -9,17 +9,17 @@ import { daysUntil, formatDate, formatDateTime, getDeadlineInfo, getExamProgress
 import { usePersonalData } from "@/components/providers/personal-data-provider";
 import { StatusBadge } from "@/components/topic/status-badge";
 import { ProgressBar } from "@/components/shared/progress-bar";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 
 const FEATURED_TRACKS: Track[] = ["speech-therapy", "neuropsychology", "child-development"];
 
 const QUICK_LINKS = [
-  ["/modules", "Учебные модули"],
-  ["/exams", "Экзамены"],
-  ["/study-tasks", "Учебные задачи"],
-  ["/notes", "Конспекты"],
-  ["/observations", "Клиническая насмотренность"],
-  ["/sources", "Источники"]
+  ["/competencies", "Карта знаний"],
+  ["/observations", "Тренажёр насмотренности"],
+  ["/books", "Изучение книг"],
+  ["/methods", "Атлас методик"],
+  ["/research", "Новые исследования"],
+  ["/study-tasks", "Учебные задачи"]
 ] as const;
 
 export function HomeDashboard() {
@@ -83,11 +83,9 @@ export function HomeDashboard() {
               <StatusBadge status={progress[current.slug]?.status ?? "not-started"} />
             </div>
           </div>
-          <Link href={`/modules/${current.slug}`}>
-            <Button variant="primary" className="w-full sm:w-auto">
-              Открыть тему
-              <ArrowRight size={15} strokeWidth={1.8} />
-            </Button>
+          <Link href={`/modules/${current.slug}`} className={buttonClassName({ variant: "primary", className: "w-full sm:w-auto" })}>
+            Открыть тему
+            <ArrowRight size={15} strokeWidth={1.8} />
           </Link>
         </section>
       ) : hasStarted ? (
@@ -97,7 +95,7 @@ export function HomeDashboard() {
             <h2 className="mt-2 text-lg font-semibold">Все начатые темы завершены</h2>
             <p className="mt-2 text-sm leading-6 text-muted-c">Можно выбрать следующую тему или вернуться к материалам для повторения.</p>
           </div>
-          <Link href="/modules"><Button variant="primary">Открыть модули <ArrowRight size={15} /></Button></Link>
+          <Link href="/modules" className={buttonClassName({ variant: "primary" })}>Открыть модули <ArrowRight size={15} /></Link>
         </section>
       ) : null}
 

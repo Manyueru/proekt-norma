@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import type {
   ContentStatus,
@@ -28,6 +29,15 @@ export function ModulesCatalog({
   modules: LearningModule[];
 }) {
   const { progress } = usePersonalData();
+  const searchParams = useSearchParams();
+  const requestedModuleIds = useMemo(() => {
+    const values = [searchParams.get("module"), searchParams.get("modules")]
+      .filter(Boolean)
+      .flatMap((value) => value!.split(","))
+      .map((value) => value.trim())
+      .filter(Boolean);
+    return new Set(values);
+  }, [searchParams]);
   const [query, setQuery] = useState("");
   const [track, setTrack] = useState<Track | "all">("all");
   const [status, setStatus] = useState<TopicStatus | "all">("all");
@@ -38,13 +48,14 @@ export function ModulesCatalog({
     return topics.filter((topic) => {
       const haystack = `${topic.title} ${topic.summary} ${topic.moduleTitle} ${TRACK_LABELS[topic.track]}`.toLowerCase();
       if (normalized && !haystack.includes(normalized)) return false;
+      if (requestedModuleIds.size > 0 && !requestedModuleIds.has(topic.moduleId)) return false;
       if (track !== "all" && topic.track !== track) return false;
       if (contentStatus !== "all" && topic.contentStatus !== contentStatus) return false;
       const topicStatus = progress[topic.slug]?.status ?? "not-started";
       if (status !== "all" && topicStatus !== status) return false;
       return true;
     });
-  }, [contentStatus, progress, query, status, topics, track]);
+  }, [contentStatus, progress, query, requestedModuleIds, status, topics, track]);
 
   const grouped = modules
     .slice()
@@ -143,7 +154,7 @@ export function ModulesCatalog({
           <details
             key={module.id}
             className="group overflow-hidden rounded-card border border-c bg-surface"
-            open={query.trim() ? true : undefined}
+            open={query.trim() || requestedModuleIds.has(module.id) ? true : undefined}
           >
             <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-5 marker:content-none md:p-6">
               <div className="min-w-0">
